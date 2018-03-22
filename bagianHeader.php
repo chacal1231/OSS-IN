@@ -137,45 +137,33 @@
                             <li>
                                 <a href="index.php">
                                     <i class="fa fa-dashboard"></i>
-                                    <span>Aquarium</span>
+                                    <span>Inventario</span>
                                 </a>
                             </li>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
-                                    <i class="fa fa-users"></i>
-                                    <span>Dashboard</span>
-                                </a>
-                            </li>
-
-                             <!-- 
                             <li class="sub-menu">
                                 <a href="javascript:;">
                                     <i class="fa fa-suitcase"></i>
-                                    <span>Sistema</span>
+                                    <span>Inventario</span>
                                 </a>
-                                <!-- <ul class="sub">
-                                    <li><a href="?page=user">(Hotspot) Usuario</a></li>
-				                    <li><a href="?page=user_generate">(Hotspot) Generar / Imprimir usuario </a></li>
-                                    <li><a href="?page=active">(Hotspot) Usuarios Activos</a></li>
-									<li><a href="?page=user_profile">(Hotspot) Perfil</a></li>
-                                    <li><a href="?page=hosts">(Hotspot) Host</a></li>
-                                    <li><a href="?page=ip_binding">(Hotspot) Ip Binding</a></li>
-                                    <li><a href="?page=queues_simple">Queues Simples</a></li>
-                                    <li><a href="?page=ppp_user">(PPP / PPPoE) Usuario</a></li>
-                                    <li><a href="?page=ppp_profile">(PPP / PPPoE) Perfiles</a></li>
+                                <ul class="sub">
+                                    <li><a href="?page=productos">Productos</a></li>
+                                    <li><a href="?page=proyectos">Proyectos</a></li>
+                                    <li><a href="?page=categorias">Categorias</a></li>
                                 </ul> 
                             </li>
                             <li class="sub-menu">
                                 <a href="javascript:;">
                                     <i class="fa fa-money"></i>
-                                    <span>Internet prepago</span>
+                                    <span>Mantenimiento</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="?page=prepaid/ticket">Generar un ticket</a></li>
-				                    <li><a href="?page=prepaid/search">Registro de usuarios</a></li>
-                                    <li><a href="?page=prepaid/billing">Registro de ventas</a></li>
+                                    <li><a href="?page=gen33">Generador 33</a></li>
+                                    <li><a href="?page=gen34">Generador 34</a></li>
+                                    <li><a href="?page=mpfm01">MPFM-01</a></li>
+                                    <li><a href="?page=mpfm02">MPFM-02</a></li>
+                                    <li><a href="?page=mpfm03">MPFM-03</a></li>
                                 </ul>
-                            </li>-->
+                            </li>
                             <li>
                                 <a href="?page=setting">
                                     <i class="fa fa-cogs"></i>
@@ -183,7 +171,8 @@
                                 </a>
                                 <ul class="sub">
                                     <li><a href="?page=setting">Cambiar mi contraseña</a></li>
-									<li><a href="?page=correos">Añadir correos a reporte semanal</a></li>
+									<li><a href="?page=correos">Añadir correos para avisos</a></li>
+                                    li><a href="?page=correos">Agregar usuarios</a></li>
                                      </ul>
                             </li
                     </div>        

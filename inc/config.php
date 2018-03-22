@@ -2,8 +2,8 @@
 	//Configuración servidor Mysql
 	$host = "localhost"; 
 	$user = "root";
-	$pass = "2*b**:E82JZ=93L|c0Tw"; 
-	$database ="aqua";
+	$pass = "jesus00**"; 
+	$database ="inventory";
 	$link=mysqli_connect($host,$user,$pass,$database); 
 	$tanggal=date("d/m/Y");
 
