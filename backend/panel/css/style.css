@@ -314,7 +314,7 @@ ul.sidebar-menu li a.active i {
     left:0;
     right:0;
     z-index:1002;
-    background:#c30e2d;
+    background:#4A7C59;
     -webkit-transition:all .3s ease-in-out;
     -moz-transition:all .3s ease-in-out;
     -o-transition:all .3s ease-in-out;
@@ -379,7 +379,7 @@ ul.top-menu > li > a {
     padding-right:8px !important;
 }
 ul.top-menu>li>a:hover,ul.top-menu>li>a:focus {
-    background:#A48AD4; /* Color de icono notificacion al pasar el mouse */
+    background:#fff; /* Color de icono notificacion al pasar el mouse */
     text-decoration:none;
     color:rgba(0,0,0,0.3) !important;
     padding-right:8px !important;
@@ -558,11 +558,11 @@ ul.top-menu>li>a:hover,ul.top-menu>li>a:focus {
     color:#32323a !important;
 }
 .dropdown-menu.extended.logout>li>a:hover {
-    background:#F0D3D3 !important; /* Color fondo llave cerrar sesion */
+    background:#4A7C59 !important; /* Color fondo llave cerrar sesion */
     border-radius:5px;
 }
 .dropdown-menu.extended.logout>li>a:hover i { /* Color de llave cerrar sesion */
-    color:#0076D0;
+    color:#4A7C59;
 }
 .dropdown-menu.extended.logout>li>a i {
     font-size:17px;
