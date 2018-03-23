@@ -143,14 +143,86 @@
                             <li class="sub-menu">
                                 <a href="javascript:;">
                                     <i class="fa fa-suitcase"></i>
-                                    <span>Inventario</span>
+                                    <span>Proyectos</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="?page=productos">Productos</a></li>
-                                    <li><a href="?page=proyectos">Proyectos</a></li>
-                                    <li><a href="?page=categorias">Categorias</a></li>
-                                </ul> 
-                            </li>
+                                    <li>
+                                    <a href="javascript:;">
+                                    <i class="fa fa-battery-full"></i>    
+                                    Generación
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li><a href="?pages=gen/herramientas">Herramientas</a></li>
+                                        <li><a href="?pages=gen/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?pages=gen/repuestos">Repuestos</a></li>
+                                        <li><a href="?pages=gen/equipos">Equipos</a></li>
+                                        <li><a href="?pages=gen/alquiler">Alquiler</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:;">
+                                    <i class="fa fa-bold"></i>    
+                                    Bombeo
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li><a href="?pages=bom/herramientas">Herramientas</a></li>
+                                        <li><a href="?pages=bom/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?pages=bom/repuestos">Repuestos</a></li>
+                                        <li><a href="?pages=bom/equipos">Equipos</a></li>
+                                        <li><a href="?pages=bom/alquiler">Alquiler</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:;">
+                                    <i class="fa fa-sitemap"></i>    
+                                    Well testing
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li><a href="?pages=wt/herramientas">Herramientas</a></li>
+                                        <li><a href="?pages=wt/repuestos">Repuestos</a></li>
+                                        <li><a href="?pages=wt/tratamiento">Equipos</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:;">
+                                    <i class="fa fa-tint"></i>    
+                                    Tratamiento
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li><a href="?pages=tra/herramientas">Herramientas</a></li>
+                                        <li><a href="?pages=tra/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?pages=tra/repuestos">Repuestos</a></li>
+                                        <li><a href="?pages=tra/equipos">Equipos</a></li>
+                                        <li><a href="?pages=tra/alquiler">Alquiler</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:;">
+                                    <i class="fa fa-fire-extinguisher"></i>    
+                                    Well services
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li><a href="?pages=ws/herramientas">Herramientas</a></li>
+                                        <li><a href="?pages=ws/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?pages=ws/repuestos">Repuestos</a></li>
+                                        <li><a href="?pages=ws/equipos">Equipos</a></li>
+                                        <li><a href="?pages=ws/alquiler">Alquiler</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:;">
+                                    <i class="fa fa-building"></i>    
+                                    Bases
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li><a href="?pages=bases/herramientas">Herramientas</a></li>
+                                        <li><a href="?pages=bases/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?pages=bases/repuestos">Repuestos</a></li>
+                                        <li><a href="?pages=bases/equipos">Equipos</a></li>
+                                        <li><a href="?pages=bases/alquiler">Alquiler</a></li>
+                                    </ul>
+                                    </li>
+                                </ul>
                             <li class="sub-menu">
                                 <a href="javascript:;">
                                     <i class="fa fa-money"></i>
@@ -172,9 +244,9 @@
                                 <ul class="sub">
                                     <li><a href="?page=setting">Cambiar mi contraseña</a></li>
 									<li><a href="?page=correos">Añadir correos para avisos</a></li>
-                                    li><a href="?page=correos">Agregar usuarios</a></li>
-                                     </ul>
-                            </li
+                                    <li><a href="?page=correos">Agregar usuarios</a></li>
+                                </ul>
+        
                     </div>        
             <!-- sidebar menu end-->
                 </div>

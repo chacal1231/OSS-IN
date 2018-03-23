@@ -1,57 +1,4 @@
-<?php
-require (__DIR__.'/inc/PHPMailer/PHPMailerAutoload.php');
-require (__DIR__.'/inc/config.php');
-ini_set('max_execution_time', 30000);
-//Fecha
-$mes=date("F");
-if ($mes=="January") $mes="Enero";
-if ($mes=="February") $mes="Febrero";
-if ($mes=="March") $mes="Marzo";
-if ($mes=="April") $mes="Abril";
-if ($mes=="May") $mes="Mayo";
-if ($mes=="June") $mes="Junio";
-if ($mes=="July") $mes="Julio";
-if ($mes=="August") $mes="Agosto";
-if ($mes=="September") $mes="Septiembre";
-if ($mes=="October") $mes="Octubre";
-if ($mes=="November") $mes="Noviembre";
-if ($mes=="December") $mes="Diciembre";
-//Consulta tabla clientes
-$ConsultaCorreos=mysqli_query($link,"SELECT * FROM correos");
-$RowCorreos=mysqli_fetch_array($ConsultaCorreos);
-
-$QueryComida=mysqli_query($link,"SELECT sum(C) FROM comida");
-$RowComida=mysqli_fetch_array($QueryComida);
-
-$QueryEnergia=mysqli_query($link,"SELECT sum(P) FROM potencia");
-$RowEnergia=mysqli_fetch_array($QueryEnergia);
-
-$QuerypH=mysqli_query($link,"SELECT AVG(P) FROM ph");
-$RowpH=mysqli_fetch_array($QuerypH);
-
-$QueryComidaAC=mysqli_query($link,"SELECT * FROM comida ORDER BY fecha ASC LIMIT 0,1");
-$RowComidaAC=mysqli_fetch_array($QueryComidaAC);
-$var1 = "David McMahon"; 
-
-
-foreach($ConsultaCorreos as $RowCorreos => $field){
-  //PHPMailer clase
-  $mail = new PHPMailer;
-  //$mail->SMTPDebug = SMTP::DEBUG_CONNECTION;
-  //$mail->Debugoutput = 'html';
-  $mail->isSMTP();
-  $mail->Host = $smtp;
-  $mail->SMTPAuth = $SMTPAuth;
-  $mail->Username = $usuarioSmtp;
-  $mail->Password = $contraseñaSmtp;
-  $mail->SMTPSecure = $SMTPSecure;
-  $mail->SMTPAuth   = true;
-  $mail->Port = $port;
- 
-  $mail->setFrom('recordatorio@oss.com.co', 'OSS Mantenimiento');
-  $mail->addAddress("compras@oss.com.co");
-  $mail->Subject = "Recordatorio mantenimiento";
-  $message = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <?xml version="1.0" encoding="windows-1252"?><html>
 <head>
 <title>Notificacion OSS</title>
@@ -62,7 +9,7 @@ foreach($ConsultaCorreos as $RowCorreos => $field){
 <table width="595" border="0" align="center" cellpadding="0" cellspacing="0">
 <tbody>
 <tr>
-<td><img src="http://www.oss.com.co/images/nav-logo.png" width="606" height="141" alt="" style=" display:block"></td>
+<td><img src="http://www.payulatam.com/img-correos-2015/header_rechazada_4.png" width="606" height="141" alt="" style=" display:block"></td>
 </tr>
 <tr>
 <td bgcolor="#DEDEDE">
@@ -73,11 +20,11 @@ foreach($ConsultaCorreos as $RowCorreos => $field){
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
-<td height="39" bgcolor="#337726">
+<td height="39" bgcolor="#ED0000">
 <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 <tbody>
 <tr>
-<td style="font-family: Arial, sans-serif; font-size:20px"><font face="arial" color="#FFFFFF">Aviso de mantenimiento</font></td>
+<td style="font-family: Arial, sans-serif; font-size:20px"><font face="arial" color="#FFFFFF">Uno de tus pagos fue rechazado</font></td>
 </tr>
 </tbody>
 </table>
@@ -88,21 +35,20 @@ foreach($ConsultaCorreos as $RowCorreos => $field){
 <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 <tbody>
 <tr>
-<td style="font-family:arial; font-size:16px;padding-top:20px;"><font face="Arial" color="#262626"><br>';
-$message .="<strong>OSS le informa que,</strong><br></font></td>";
-$message .='</tr>
+<td style="font-family:arial; font-size:16px;padding-top:20px;"><font face="Arial" color="#262626"><br>
+<strong>Hola Mayra Vergara,</strong><br></font></td>
+</tr>
 <tr>
 <td height="20"></td>
 </tr>
-<tr>';
-$message .="<td style=font-size:16px><font face=Arial color=#262626>El mantenimiento del generador <b><font color=#A6C307>$gen</font></b> debe realizarse de inmediato.</td>";
-$message .= '
+<tr>
+<td style="font-size:16px"><font face="Arial" color="#262626">El mantenimiento <font color="#A6C307">d21b3ee5-648e-46df-ad38-57fcb1b17670</font> realizada en <font color="#A6C307">http://www.elrow.com</font> , fue <font color="#262626"><b>rechazada</b></font> .</font></td>
 </tr>
 <tr>
 <td>&nbsp;</td>
 </tr>
 <tr>
-<td style="font-family: Arial, sans-serif; font-size:16px; color:#262626">Informaci&oacute;n del mantenimiento:</td>
+<td style="font-family: Arial, sans-serif; font-size:16px; color:#262626">Datos de la transacci&oacute;n:</td>
 </tr>
 <tr>
 <td height="6"></td>
@@ -130,9 +76,9 @@ $message .= '
 <td width="61%" bgcolor="#F5F7F8">
 <table width="92%" border="0" align="center" cellpadding="0" cellspacing="0">
 <tbody>
-<tr>';
-$message .="<td><font face=arial size=2 color=#94969B>$Des</font></td>";
-$message .='</tr>
+<tr>
+<td><font face="arial" size="2" color="#94969B">Eventbee: "elrow Sambodrom..." Id: RK3DLYFCVN</font></td>
+</tr>
 </tbody>
 </table>
 </td>
@@ -288,10 +234,3 @@ $message .='</tr>
 <p><img border="0" width="1" height="1" alt="" src="http://post.spmailtechnolo.com/q/P4qX1-Sl944A-yH_1gtrIg~~/AABjOAA~/RgRcexhMPlcDc3BjWAQAAAAAQgoAA0yTmFpHzvILUhlkYXZpZC5tYWNtYWhvbkBvc3MuY29tLmNv"></p>
 </body>
 </html>
-';
-  $mail->Body = $message;
-  $mail->AltBody = 'OSS le informa que se debe realizar mantenimiento a $equipo lo más pronto posible.';
-  $mail->isHTML(true);
-  $mail->send();
-}
-?>

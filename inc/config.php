@@ -22,9 +22,9 @@
 	$iva_empresa="16%";
 	
 	//Correo 
-	$usuarioSmtp="grupositelsas@gmail.com";
-	$contraseñaSmtp="jesus00**";
-	$smtp="smtp.gmail.com";
+	$usuarioSmtp="recordatorio@oss.com.co";
+	$contraseñaSmtp="1&m(O0_th.H@";
+	$smtp="host5.latinoamericahosting.com";
 	$SMTPSecure="tls";
 	$port="587";
 	$SMTPAuth=true;

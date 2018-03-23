@@ -223,7 +223,7 @@ ul.sidebar-menu {
     display:block;
 }
 ul.sidebar-menu li ul.sub li {
-    background:#28282e;
+    background:#28282e; /* Color background sidebar */
     margin-bottom:0;
     margin-left:0;
     margin-right:0;
@@ -237,7 +237,7 @@ ul.sidebar-menu li ul.sub li a {
     -o-transition:all 0.3s ease;
     -ms-transition:all 0.3s ease;
     transition:all 0.3s ease;
-    color:#aeb2b7;
+    color:#fff;
 }
 ul.sidebar-menu li ul.sub li a:hover,ul.sidebar-menu li ul.sub li.active a {
     color:#1fb5ad;
