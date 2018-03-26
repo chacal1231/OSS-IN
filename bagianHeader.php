@@ -152,11 +152,11 @@
                                     Generación
                                     </a>
                                     <ul class="sub-menu">
-                                        <li><a href="?pages=gen/herramientas">Herramientas</a></li>
-                                        <li><a href="?pages=gen/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?pages=gen/repuestos">Repuestos</a></li>
-                                        <li><a href="?pages=gen/equipos">Equipos</a></li>
-                                        <li><a href="?pages=gen/alquiler">Alquiler</a></li>
+                                        <li><a href="?page=gen/herramientas">Herramientas</a></li>
+                                        <li><a href="?page=gen/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?page=gen/repuestos">Repuestos</a></li>
+                                        <li><a href="?page=gen/equipos">Equipos</a></li>
+                                        <li><a href="?page=gen/alquiler">Alquiler</a></li>
                                     </ul>
                                     </li>
                                     <li>
@@ -165,11 +165,11 @@
                                     Bombeo
                                     </a>
                                     <ul class="sub-menu">
-                                        <li><a href="?pages=bom/herramientas">Herramientas</a></li>
-                                        <li><a href="?pages=bom/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?pages=bom/repuestos">Repuestos</a></li>
-                                        <li><a href="?pages=bom/equipos">Equipos</a></li>
-                                        <li><a href="?pages=bom/alquiler">Alquiler</a></li>
+                                        <li><a href="?page=bom/herramientas">Herramientas</a></li>
+                                        <li><a href="?page=bom/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?page=bom/repuestos">Repuestos</a></li>
+                                        <li><a href="?page=bom/equipos">Equipos</a></li>
+                                        <li><a href="?page=bom/alquiler">Alquiler</a></li>
                                     </ul>
                                     </li>
                                     <li>
@@ -178,9 +178,9 @@
                                     Well testing
                                     </a>
                                     <ul class="sub-menu">
-                                        <li><a href="?pages=wt/herramientas">Herramientas</a></li>
-                                        <li><a href="?pages=wt/repuestos">Repuestos</a></li>
-                                        <li><a href="?pages=wt/tratamiento">Equipos</a></li>
+                                        <li><a href="?page=wt/herramientas">Herramientas</a></li>
+                                        <li><a href="?page=wt/repuestos">Repuestos</a></li>
+                                        <li><a href="?page=wt/tratamiento">Equipos</a></li>
                                     </ul>
                                     </li>
                                     <li>
@@ -189,11 +189,11 @@
                                     Tratamiento
                                     </a>
                                     <ul class="sub-menu">
-                                        <li><a href="?pages=tra/herramientas">Herramientas</a></li>
-                                        <li><a href="?pages=tra/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?pages=tra/repuestos">Repuestos</a></li>
-                                        <li><a href="?pages=tra/equipos">Equipos</a></li>
-                                        <li><a href="?pages=tra/alquiler">Alquiler</a></li>
+                                        <li><a href="?page=tra/herramientas">Herramientas</a></li>
+                                        <li><a href="?page=tra/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?page=tra/repuestos">Repuestos</a></li>
+                                        <li><a href="?page=tra/equipos">Equipos</a></li>
+                                        <li><a href="?page=tra/alquiler">Alquiler</a></li>
                                     </ul>
                                     </li>
                                     <li>
@@ -202,11 +202,11 @@
                                     Well services
                                     </a>
                                     <ul class="sub-menu">
-                                        <li><a href="?pages=ws/herramientas">Herramientas</a></li>
-                                        <li><a href="?pages=ws/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?pages=ws/repuestos">Repuestos</a></li>
-                                        <li><a href="?pages=ws/equipos">Equipos</a></li>
-                                        <li><a href="?pages=ws/alquiler">Alquiler</a></li>
+                                        <li><a href="?page=ws/herramientas">Herramientas</a></li>
+                                        <li><a href="?page=ws/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?page=ws/repuestos">Repuestos</a></li>
+                                        <li><a href="?page=ws/equipos">Equipos</a></li>
+                                        <li><a href="?page=ws/alquiler">Alquiler</a></li>
                                     </ul>
                                     </li>
                                     <li>
@@ -215,11 +215,11 @@
                                     Bases
                                     </a>
                                     <ul class="sub-menu">
-                                        <li><a href="?pages=bases/herramientas">Herramientas</a></li>
-                                        <li><a href="?pages=bases/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?pages=bases/repuestos">Repuestos</a></li>
-                                        <li><a href="?pages=bases/equipos">Equipos</a></li>
-                                        <li><a href="?pages=bases/alquiler">Alquiler</a></li>
+                                        <li><a href="?page=bases/herramientas">Herramientas</a></li>
+                                        <li><a href="?page=bases/aceite">Aceites y lubricantes</a></li>
+                                        <li><a href="?page=bases/repuestos">Repuestos</a></li>
+                                        <li><a href="?page=bases/equipos">Equipos</a></li>
+                                        <li><a href="?page=bases/alquiler">Alquiler</a></li>
                                     </ul>
                                     </li>
                                 </ul>
