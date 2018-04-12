@@ -7,26 +7,36 @@ if (isset($_POST['post'])) {
 	$des 		=	mysqli_real_escape_string($link,$_POST['des']);
 	$marca 		=	mysqli_real_escape_string($link,$_POST['marca']);
 	$fecha_c 	=	mysqli_real_escape_string($link,$_POST['fecha_c']);
+    $valor      =   mysqli_real_escape_string($link,$_POST['valor']);
 	$unid 		=	mysqli_real_escape_string($link,$_POST['unid']);
 	$nota 		=	mysqli_real_escape_string($link,$_POST['nota']);
 	$proyecto	=	"Gen";
 
 	//Mysql
-	$result     = 	mysqli_query($link,"SELECT * FROM herra order by id DESC");
+	$result     = 	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
     $row        = 	mysqli_fetch_array($result);            
     $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO herra(id,ref,marca,fecha_c,unid,nota,proyecto) VALUES('$id','$des','$marca','$fecha_c','$unid','$nota','$proyecto')");
-	$my_error = mysqli_error($link);
-	if(empty($my_error)){
-			echo '<div class="alert alert-success" role="alert">
+	mysqli_query($link,"INSERT INTO herra(id,ref,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
+	
+    //Actualizar registro
+    $fecha          =   date('Y-m-d');
+    $hora           =   date('h:i:s A');
+    $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
+    $row_reg        =   mysqli_fetch_array($result_reg);            
+    $id_reg         =   ($row_reg["id"]+1);
+    $des            =   "$_SESSION[name] agregó $unid unidades";
+    mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unid')");
+    $my_error = mysqli_error($link);
+    if(empty($my_error)){
+            echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Todo correcto!</strong> Se ha añadido correctamente el producto.</div>';
     }else{
-    	echo $my_error;
-    }   
+        echo $my_error;
+    }
 }
 //Query tabla
-$QueryTabla =	mysqli_query($link,"SELECT * FROM herra ORDER BY id DESC");
+$QueryTabla =	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
 $RowTabla	=	mysqli_fetch_array($QueryTabla);
 ?>
 
@@ -48,10 +58,10 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
                                             <th>Referencia</th>
                                             <th>Marca</th>
                                             <th>Fecha compra</th>
+                                            <th>Valor de compra</th>
                                             <th>Unidades</th>
                                             <th>Descripción</th>
-                                            <th>Eliminar stock</th>
-                                            <th>Agregar stock</th>
+                                            <th>Ver producto</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,18 +71,14 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
                                             <td><?php echo $field['ref']; ?></td>
                                             <td><?php echo $field['marca']; ?></td>
                                             <td><?php echo $field['fecha_c']; ?></td>
+                                            <td><?php echo number_format($field['precio']); ?></td>
                                             <td><?php echo $field['unid']; ?></td>
                                             <td><?php echo $field['nota']; ?></td>
                                             <td>
-                                                <a class="btn btn-danger btn-xs" href="?page=eli_sc&id=<?php echo $field['frec']; ?>" title="Eliminar" onClick="return confirm('Do you want delete this?')">
-                                                    <i class="fa fa-trash-o"></i>
+                                                <a class="btn btn-success btn-xs" target="_blank" href="?page=gen/producto&id=<?php echo $field['id']; ?>" title="Ver">
+                                                    <i class="fa fa-eye"></i>
                                                 </a>
-                                            </td>
-                                            <td>
-                                                <a class="btn btn-success btn-xs" href="?page=eli_sc&id=<?php echo $field['frec']; ?>" title="Eliminar" onClick="return confirm('Do you want delete this?')">
-                                                    <i class="fa fa-plus"></i>
-                                                </a>
-                                            </td>                                                
+                                            </td>                                               
                                         </tr>
                                         <?php endforeach; ?> <!-- Selesai loop -->                                  
                                     </tbody>
@@ -113,6 +119,10 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
       	 		<label for="recipient-name" class="control-label"><b>Fecha compra *:</b></label>
                 <input type="text" class="form-control" required id="datepicker" data-date-format="yyyy-mm-dd" readonly="readonly" name="fecha_c" required>
 			</div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Valor producto *:</b></label>
+                <input type="text" class="form-control" name="valor" required>
+            </div>
 			<div class="form-group">
       	 		<label for="recipient-name" class="control-label"><b>Unidades *:</b></label>
                 <input type="text" class="form-control" name="unid" required>
