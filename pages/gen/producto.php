@@ -44,6 +44,16 @@ if (isset($_POST['del'])) {
                      <strong>¡Todo correcto!</strong> Se han eliminado correctamente las unidades al stock</div>';
   header("Refresh:3");
 }
+if (isset($_POST['del'])) {
+  $ref      = mysqli_real_escape_string($link,$_POST['ref']);
+  $des      = mysqli_real_escape_string($link,$_POST['des']);
+  $marca    = mysqli_real_escape_string($link,$_POST['marca']);
+  $fecha_c  = mysqli_real_escape_string($link,$_POST['fecha_c']);
+  $valor    = mysqli_real_escape_string($link,$_POST['valor']);
+  $unid     = mysqli_real_escape_string($link,$_POST['unid']);
+  $nota     = mysqli_real_escape_string($link,$_POST['nota']);
+  $proyecto = "Gen";
+  }
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +68,7 @@ if (isset($_POST['del'])) {
               						<div class="col-sm-4 col-sm-offset-2 text-center"> 
 				  							<br><br><br><br><br><br><br>
                     						<a href="#" class="btn btn-danger" onclick="eliminar('<?php echo $row['id_producto'];?>')" title="Eliminar"> <i class="glyphicon glyphicon-trash"></i> Eliminar </a> 
-											<a href="#myModal2" data-toggle="modal" data-codigo='<?php echo $row['codigo_producto'];?>' data-nombre='<?php echo $row['nombre_producto'];?>' data-categoria='<?php echo $row['id_categoria']?>' data-precio='<?php echo $row['precio_producto']?>' data-stock='<?php echo $row['stock'];?>' data-id='<?php echo $row['id_producto'];?>' class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-pencil"></i> Editar </a>	
+											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-pencil"></i> Editar </a>	
 					
               						</div>
               						<div class="col-sm-4 text-left">
@@ -177,6 +187,57 @@ if (isset($_POST['del'])) {
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         <button type="submit" class="btn btn-primary" name="del" value="Sign up">Agregar</button>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modificar item <?php echo $RowId['ref'];?></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="modal-form" action="" method="post">
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Referencia *:</b></label>
+                <input type="text" class="form-control" name="ref" value="<?php echo $RowId['ref'];?>" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Descripción *:</b></label>
+                <input type="text" class="form-control" name="des" value="<?php echo $RowId['des'];?>" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Marca *:</b></label>
+                <input type="text" class="form-control" name="marca" value="<?php echo $RowId['marca'];?>" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Fecha compra *:</b></label>
+                <input type="text" class="form-control" required id="datepicker" data-date-format="yyyy-mm-dd" value="<?php echo $RowId['fecha_c'];?>" name="fecha_c" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Valor producto *:</b></label>
+                <input type="text" class="form-control" name="valor" value="<?php echo $RowId['precio'];?>" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Unidades *:</b></label>
+                <input type="text" class="form-control" name="unid" value="<?php echo $RowId['unid'];?>" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Nota *:</b></label>
+                <textarea class="form-control" rows="5" name="nota"><?php echo $RowId['nota'];?></textarea>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary" name="modi" value="Sign up">Agregar</button>
          </form>
       </div>
     </div>
