@@ -16,7 +16,7 @@ if (isset($_POST['post'])) {
 	$result     = 	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
     $row        = 	mysqli_fetch_array($result);            
     $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO herra(id,ref,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
+	mysqli_query($link,"INSERT INTO herra(id,ref,des,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
 	
     //Actualizar registro
     $fecha          =   date('Y-m-d');
