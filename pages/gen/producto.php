@@ -3,8 +3,32 @@
 //GET
 $id	= $_GET['id'];
 //Mysql
-$QueryId	=	mysqli_query($link,"SELECT * FROM herra WHERE id='$id' AND proyecto='Gen'");
+$QueryId	=	mysqli_query($link,"SELECT * FROM herra WHERE id='$id' AND proyecto='Gen' ORDER BY id DESC");
 $RowId		=	mysqli_fetch_array($QueryId);
+//POST ADD
+if (isset($_POST['add'])) {
+  $unidades_a   = mysqli_escape_string($link,$_POST['unidades_a']);
+  $new_uni  = $RowId['unid'] + $unidades_a;
+  $des_a  = "$_SESSION[name] agregó $unidades_a al stock";
+  //Query actualizar producto
+  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='Gen'");
+  //Query insertar nuevo registro
+  $fecha          =   date('Y-m-d');
+  $hora           =   date('h:i:s A');
+  $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
+  $row_reg        =   mysqli_fetch_array($result_reg);            
+  $id_reg         =   ($row_reg["id"]+1);
+  mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des_a','$RowId[ref]','$new_uni')");
+  echo '<div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Todo correcto!</strong> Se han añadido correctamente las unidades al stock</div>';
+  header("Refresh:3");
+}
+//POST DEL
+if (isset($_POST['del'])) {
+  $unidades_d   = mysqli_escape_string($link,$_POST['unidades_d']);
+  echo $unidades_d;
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,11 +64,11 @@ $RowId		=	mysqli_fetch_array($QueryId);
                     					</div>
 										          <div class="col-sm-12 margin-btm-10">
 										          </div>
-                    					<div class="col-sm-6 col-xs-6 col-md-4 ">
-                     						<a href="" data-toggle="modal" data-target="#add-stock"><img width="100px"  src="backend/images/stock-in.png"></a>
+                    					<div class="col-sm-6 col-xs-6 col-md-4">
+                     						<a href="" data-toggle="modal" data-target="#Agregar"><img width="100px"  src="backend/images/stock-in.png"></a>
                     					</div>
                     					<div class="col-sm-6 col-xs-6 col-md-4">
-                      						<a href="" data-toggle="modal" data-target="#remove-stock"><img width="100px"  src="backend/images/stock-out.png"></a>
+                      						<a href="" data-toggle="modal" data-target="#Eliminar"><img width="100px"  src="backend/images/stock-out.png"></a>
                     					</div>
                     					<div class="col-sm-12 margin-btm-10">
                    	 					</div>                   
@@ -67,7 +91,7 @@ $RowId		=	mysqli_fetch_array($QueryId);
 							<td class='text-center'>Total</td>
 						</tr>
 						<?php
-							$query=mysqli_query($link,"SELECT * FROM registro WHERE ref='$RowId[ref]'");
+							$query=mysqli_query($link,"SELECT * FROM registro WHERE ref='$RowId[ref]' ORDER BY id DESC");
 							while ($row=mysqli_fetch_array($query)){
 								?>
 						<tr>
@@ -91,3 +115,55 @@ $RowId		=	mysqli_fetch_array($QueryId);
 </div>
 </body>
 </html>
+
+<!-- Modal -->
+<div class="modal fade" id="Agregar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar stock</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="modal-form" action="" method="post">
+            <div class="form-group">
+                  <label for="recipient-name" class="control-label"><b>Unidades a agregar *:</b></label>
+                  <input type="text" class="form-control" name="unidades_a" required>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary" name="add" value="Sign up">Agregar</button>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="Eliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Eliminar stock</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="modal-form" action="" method="post">
+            <div class="form-group">
+                  <label for="recipient-name" class="control-label"><b>Unidades a eliminar *:</b></label>
+                  <input type="text" class="form-control" name="unidades_d" required>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary" name="del" value="Sign up">Agregar</button>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>
