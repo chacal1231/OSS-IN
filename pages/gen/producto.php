@@ -28,6 +28,21 @@ if (isset($_POST['add'])) {
 if (isset($_POST['del'])) {
   $unidades_d   = mysqli_escape_string($link,$_POST['unidades_d']);
   echo $unidades_d;
+  $new_uni  = $RowId['unid'] - $unidades_d;
+  $des_d  = "$_SESSION[name] eliminó $unidades_d del stock";
+  //Query actualizar producto
+  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='Gen'");
+  //Query insertar nuevo registro
+  $fecha          =   date('Y-m-d');
+  $hora           =   date('h:i:s A');
+  $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
+  $row_reg        =   mysqli_fetch_array($result_reg);            
+  $id_reg         =   ($row_reg["id"]+1);
+  mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des_d','$RowId[ref]','$new_uni')");
+  echo '<div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Todo correcto!</strong> Se han eliminado correctamente las unidades al stock</div>';
+  header("Refresh:3");
 }
 ?>
 
