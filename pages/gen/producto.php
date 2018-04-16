@@ -1,9 +1,10 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
 //GET
-$id	= $_GET['id'];
+$id	        =   $_GET['id'];
+$proyecto   =  "Gen";
 //Mysql
-$QueryId	=	mysqli_query($link,"SELECT * FROM herra WHERE id='$id' AND proyecto='Gen' ORDER BY id DESC");
+$QueryId	=	mysqli_query($link,"SELECT * FROM herra WHERE id='$id' AND proyecto='$proyecto' ORDER BY id DESC");
 $RowId		=	mysqli_fetch_array($QueryId);
 //POST ADD
 if (isset($_POST['add'])) {
@@ -11,7 +12,7 @@ if (isset($_POST['add'])) {
   $new_uni  = $RowId['unid'] + $unidades_a;
   $des_a  = "$_SESSION[name] agregó $unidades_a al stock";
   //Query actualizar producto
-  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='Gen'");
+  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='$proyecto'");
   //Query insertar nuevo registro
   $fecha          =   date('Y-m-d');
   $hora           =   date('h:i:s A');
@@ -27,11 +28,10 @@ if (isset($_POST['add'])) {
 //POST DEL
 if (isset($_POST['del'])) {
   $unidades_d   = mysqli_escape_string($link,$_POST['unidades_d']);
-  echo $unidades_d;
   $new_uni  = $RowId['unid'] - $unidades_d;
   $des_d  = "$_SESSION[name] eliminó $unidades_d del stock";
   //Query actualizar producto
-  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='Gen'");
+  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='$proyecto'");
   //Query insertar nuevo registro
   $fecha          =   date('Y-m-d');
   $hora           =   date('h:i:s A');
@@ -44,16 +44,42 @@ if (isset($_POST['del'])) {
                      <strong>¡Todo correcto!</strong> Se han eliminado correctamente las unidades al stock</div>';
   header("Refresh:3");
 }
-if (isset($_POST['del'])) {
-  $ref      = mysqli_real_escape_string($link,$_POST['ref']);
-  $des      = mysqli_real_escape_string($link,$_POST['des']);
-  $marca    = mysqli_real_escape_string($link,$_POST['marca']);
-  $fecha_c  = mysqli_real_escape_string($link,$_POST['fecha_c']);
-  $valor    = mysqli_real_escape_string($link,$_POST['valor']);
-  $unid     = mysqli_real_escape_string($link,$_POST['unid']);
-  $nota     = mysqli_real_escape_string($link,$_POST['nota']);
-  $proyecto = "Gen";
+if (isset($_POST['modi'])) {
+  if($_SESSION['priv']!=0){
+    echo '<div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Usted no tiene privilegios suficientes para continuar con la operación!</strong></div>';
+  }else{
+    $ref_m      = mysqli_real_escape_string($link,$_POST['ref']);
+    $des_m      = mysqli_real_escape_string($link,$_POST['des']);
+    $marca_m    = mysqli_real_escape_string($link,$_POST['marca']);
+    $fecha_c_m  = mysqli_real_escape_string($link,$_POST['fecha_c']);
+    $valor_m    = mysqli_real_escape_string($link,$_POST['valor']);
+    $unid_m     = mysqli_real_escape_string($link,$_POST['unid']);
+    $nota_m     = mysqli_real_escape_string($link,$_POST['nota']);
+    mysqli_query($link,"UPDATE herra SET ref='$ref_m',des='$des_m',marca='$marca_m',fecha_c='$fecha_c_m',precio='$valor_m',unid='$unid_m',nota='$nota_m',proyecto='$proyecto' WHERE id='$id'");
+    echo '<div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Todo correcto!</strong> Se han modificado correctamente el producto.</div>';
+    header("Refresh:3");
   }
+}
+if (isset($_POST['remove'])) {
+  if($_SESSION['priv']!=0){
+    echo '<div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Usted no tiene privilegios suficientes para continuar con la operación!</strong></div>';
+  }else{
+    mysqli_query($link,"DELETE * FROM herra WHERE id='$_POST[remove]' AND proyecto='$proyecto'");
+    echo '<div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Todo correcto!</strong> Se han eliminado correctamente el producto.</div>';
+      echo "<script>setTimeout(\"window.open('?page=gen/herramientas');\", 2000);</script>";
+
+  }
+  
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -65,16 +91,20 @@ if (isset($_POST['del'])) {
 			<div class="panel panel-default">
           				<div class="panel-body">
             					<div class="row">
-              						<div class="col-sm-4 col-sm-offset-2 text-center"> 
-				  							<br><br><br><br><br><br><br>
-                    						<a href="#" class="btn btn-danger" onclick="eliminar('<?php echo $row['id_producto'];?>')" title="Eliminar"> <i class="glyphicon glyphicon-trash"></i> Eliminar </a> 
+              						<div class="col-sm-4 col-sm-offset-2 text-center">
+                        <form action="" method="post">
+                                <button type="submit" class="btn btn-danger" name='remove' value='<?php echo $id;?>'>
+                                    <i class="glyphicon glyphicon-trash"></i> eliminar
+                                </button>
+                       
 											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-pencil"></i> Editar </a>	
+                          </form>
 					
               						</div>
               						<div class="col-sm-4 text-left">
                 						<div class="row margin-btm-20">
                     						<div class="col-sm-12">
-                      							<b><span class="item-title">Decripción:</b> <?php echo $RowId['nota'];?></span>
+                      							<b><span class="item-title">Decripción:</b> <?php echo $RowId['des'];?></span>
                     						</div>
                     						<div class="col-sm-12 margin-btm-10">
                       							<b><span class="item-number">Referencia:</b> <?php echo $RowId['ref'];?></span>
@@ -82,7 +112,7 @@ if (isset($_POST['del'])) {
                     						<div class="col-sm-12 margin-btm-10">
                     						</div>
                     						<div class="col-sm-12">
-                      							<b><span class="current-stock">Stock disponible:</b> <?php echo $RowId['unid'];?>  unidades</span>
+                      							<b><span class="current-stock">Stock disponible:</b> <?php echo $RowId['unid'];?>  Unidades</span>
                     						</div>
 										            <div class="col-sm-12">
                       							<b><span class="current-stock">Precio compra</b> <?php echo number_format($RowId['precio'],2);?></span>
