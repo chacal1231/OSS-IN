@@ -70,7 +70,7 @@ if (isset($_POST['remove'])) {
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Usted no tiene privilegios suficientes para continuar con la operación!</strong></div>';
   }else{
-    mysqli_query($link,"DELETE * FROM herra WHERE id='$_POST[remove]' AND proyecto='$proyecto'");
+    mysqli_query($link,"DELETE FROM herra WHERE id='$_POST[remove]' AND proyecto='$proyecto'");
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Todo correcto!</strong> Se han eliminado correctamente el producto.</div>';
