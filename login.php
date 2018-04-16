@@ -52,6 +52,7 @@
                                 $_SESSION['admin'] = $username;
                                 $_SESSION['name'] = $row['name_user'];
                                 $_SESSION['id'] = $row['id_user'];
+                                $_SESSION['priv'] = $row['priv'];
                                 header("location: index.php");
                             }else{
                                 echo "		
