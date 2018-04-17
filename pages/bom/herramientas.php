@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
 //Modulo
+$proyecto   =   "Bom";
 $modulo     =   "herra";
 if (isset($_POST['post'])) {
 	//POST
@@ -12,10 +13,9 @@ if (isset($_POST['post'])) {
     $valor      =   mysqli_real_escape_string($link,$_POST['valor']);
 	$unid 		=	mysqli_real_escape_string($link,$_POST['unid']);
 	$nota 		=	mysqli_real_escape_string($link,$_POST['nota']);
-	$proyecto	=	"Gen";
 
 	//Mysql
-	$result     = 	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
+	$result     = 	mysqli_query($link,"SELECT * FROM herra ORDER BY id DESC");
     $row        = 	mysqli_fetch_array($result);            
     $id         =	($row["id"]+1);
 	mysqli_query($link,"INSERT INTO herra(id,ref,des,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
@@ -38,7 +38,7 @@ if (isset($_POST['post'])) {
     }
 }
 //Query tabla
-$QueryTabla =	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
+$QueryTabla =	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='$proyecto' ORDER BY id DESC");
 $RowTabla	=	mysqli_fetch_array($QueryTabla);
 ?>
 

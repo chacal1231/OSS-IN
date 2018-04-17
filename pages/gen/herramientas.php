@@ -15,7 +15,7 @@ if (isset($_POST['post'])) {
 	$proyecto	=	"Gen";
 
 	//Mysql
-	$result     = 	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
+	$result     = 	mysqli_query($link,"SELECT * FROM herra ORDER BY id DESC");
     $row        = 	mysqli_fetch_array($result);            
     $id         =	($row["id"]+1);
 	mysqli_query($link,"INSERT INTO herra(id,ref,des,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");

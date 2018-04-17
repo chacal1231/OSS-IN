@@ -3,7 +3,7 @@
 //GET
 $ref	        =   $_GET['ref'];
 $modulo       =   $_GET['mod'];
-$proyecto     =  "Gen";
+$proyecto     =  "Bom";
 //Mysql
 $QueryId	=	mysqli_query($link,"SELECT * FROM $modulo WHERE ref='$ref' AND proyecto='$proyecto' ORDER BY id DESC");
 $RowId		=	mysqli_fetch_array($QueryId);
