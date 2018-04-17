@@ -55,7 +55,6 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
                                 <table  class="display table table-bordered table-striped" id="dynamic-table">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
                                             <th>Referencia</th>
                                             <th>Marca</th>
                                             <th>Fecha compra</th>
@@ -68,7 +67,6 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
                                     <tbody>
                                         <?php foreach( $QueryTabla as $RowTabla => $field ) : ?> <!-- Mulai loop -->
                                         <tr class="text-besar">
-                                            <td><?php echo $field['id']; ?></td>
                                             <td><?php echo $field['ref']; ?></td>
                                             <td><?php echo $field['marca']; ?></td>
                                             <td><?php echo $field['fecha_c']; ?></td>
