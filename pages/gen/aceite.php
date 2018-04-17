@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
-//Modulo
-$modulo     =   "herra";
+$modulo =   "aceite";
 if (isset($_POST['post'])) {
 	//POST
 
@@ -15,10 +14,10 @@ if (isset($_POST['post'])) {
 	$proyecto	=	"Gen";
 
 	//Mysql
-	$result     = 	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
+	$result     = 	mysqli_query($link,"SELECT * FROM aceite WHERE proyecto='Gen' ORDER BY id DESC");
     $row        = 	mysqli_fetch_array($result);            
     $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO herra(id,ref,des,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
+	mysqli_query($link,"INSERT INTO aceite(id,ref,des,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
 	
     //Actualizar registro
     $fecha          =   date('Y-m-d');
@@ -38,7 +37,7 @@ if (isset($_POST['post'])) {
     }
 }
 //Query tabla
-$QueryTabla =	mysqli_query($link,"SELECT * FROM herra WHERE proyecto='Gen' ORDER BY id DESC");
+$QueryTabla =	mysqli_query($link,"SELECT * FROM aceite WHERE proyecto='Gen' ORDER BY id DESC");
 $RowTabla	=	mysqli_fetch_array($QueryTabla);
 ?>
 
@@ -46,11 +45,11 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
     <div class="col-sm-12">
         <section class="panel">
             <header class="panel-heading">
-                Inventario de herramientas 
+                Inventario de aceites/lubricantes 
             </header>
             <section class="panel">
                         <div class="panel-body"> 
-                        	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar herramientas</button>
+                        	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar Aceites/lubricantes</button>
                             <hr/>
                             <div class="table-responsive">
                                 <table  class="display table table-bordered table-striped" id="dynamic-table">
@@ -101,7 +100,7 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Nueva herramienta</h4>
+        <h4 class="modal-title">Nuevo aceite/lubricante</h4>
       </div>
       <div class="modal-body">
       	 <form id="modal-form" action="" method="post">
