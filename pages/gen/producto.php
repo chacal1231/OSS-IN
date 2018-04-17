@@ -1,10 +1,11 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
 //GET
-$id	        =   $_GET['id'];
-$proyecto   =  "Gen";
+$ref	        =   $_GET['ref'];
+$modulo       =   $_GET['mod'];
+$proyecto     =  "Gen";
 //Mysql
-$QueryId	=	mysqli_query($link,"SELECT * FROM herra WHERE id='$id' AND proyecto='$proyecto' ORDER BY id DESC");
+$QueryId	=	mysqli_query($link,"SELECT * FROM $modulo WHERE ref='$ref' AND proyecto='$proyecto' ORDER BY id DESC");
 $RowId		=	mysqli_fetch_array($QueryId);
 //POST ADD
 if (isset($_POST['add'])) {
@@ -12,7 +13,7 @@ if (isset($_POST['add'])) {
   $new_uni  = $RowId['unid'] + $unidades_a;
   $des_a  = "$_SESSION[name] agregó $unidades_a al stock";
   //Query actualizar producto
-  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='$proyecto'");
+  mysqli_query($link,"UPDATE $modulo SET unid='$new_uni' WHERE proyecto='$proyecto'");
   //Query insertar nuevo registro
   $fecha          =   date('Y-m-d');
   $hora           =   date('h:i:s A');
@@ -31,7 +32,7 @@ if (isset($_POST['del'])) {
   $new_uni  = $RowId['unid'] - $unidades_d;
   $des_d  = "$_SESSION[name] eliminó $unidades_d del stock";
   //Query actualizar producto
-  mysqli_query($link,"UPDATE herra SET unid='$new_uni' WHERE proyecto='$proyecto'");
+  mysqli_query($link,"UPDATE $modulo SET unid='$new_uni' WHERE proyecto='$proyecto'");
   //Query insertar nuevo registro
   $fecha          =   date('Y-m-d');
   $hora           =   date('h:i:s A');
@@ -57,11 +58,11 @@ if (isset($_POST['modi'])) {
     $valor_m    = mysqli_real_escape_string($link,$_POST['valor']);
     $unid_m     = mysqli_real_escape_string($link,$_POST['unid']);
     $nota_m     = mysqli_real_escape_string($link,$_POST['nota']);
-    mysqli_query($link,"UPDATE herra SET ref='$ref_m',des='$des_m',marca='$marca_m',fecha_c='$fecha_c_m',precio='$valor_m',unid='$unid_m',nota='$nota_m',proyecto='$proyecto' WHERE id='$id'");
+    mysqli_query($link,"UPDATE $modulo SET ref='$ref_m',des='$des_m',marca='$marca_m',fecha_c='$fecha_c_m',precio='$valor_m',unid='$unid_m',nota='$nota_m',proyecto='$proyecto' WHERE ref='$ref'");
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Todo correcto!</strong> Se han modificado correctamente el producto.</div>';
-    header("Refresh:3");
+    echo "<script>setTimeout(\"location.href = '?page=home';\", 3000);</script>";
   }
 }
 if (isset($_POST['remove'])) {
@@ -70,11 +71,11 @@ if (isset($_POST['remove'])) {
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Usted no tiene privilegios suficientes para continuar con la operación!</strong></div>';
   }else{
-    mysqli_query($link,"DELETE FROM herra WHERE id='$_POST[remove]' AND proyecto='$proyecto'");
+    mysqli_query($link,"DELETE FROM $modulo WHERE ref='$_POST[remove]' AND proyecto='$proyecto'");
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Todo correcto!</strong> Se han eliminado correctamente el producto.</div>';
-      echo "<script>setTimeout(\"location.href = '?page=gen/herramientas';\", 3000);</script>";
+      echo "<script>setTimeout(\"location.href = '?page=home';\", 3000);</script>";
   }
   
 }
@@ -92,7 +93,7 @@ if (isset($_POST['remove'])) {
             					<div class="row">
               						<div class="col-sm-4 col-sm-offset-2 text-center">
                         <form action="" method="post">
-                                <button type="submit" class="btn btn-danger" name='remove' value='<?php echo $id;?>'>
+                                <button type="submit" class="btn btn-danger" name='remove' value='<?php echo $ref;?>'>
                                     <i class="glyphicon glyphicon-trash"></i> eliminar
                                 </button>
                        
