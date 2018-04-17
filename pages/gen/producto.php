@@ -72,6 +72,7 @@ if (isset($_POST['remove'])) {
                      <strong>¡Usted no tiene privilegios suficientes para continuar con la operación!</strong></div>';
   }else{
     mysqli_query($link,"DELETE FROM $modulo WHERE ref='$_POST[remove]' AND proyecto='$proyecto'");
+    mysqli_query($link,"DELETE FROM registro WHERE ref='$_POST[remove]'");
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Todo correcto!</strong> Se han eliminado correctamente el producto.</div>';
