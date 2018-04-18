@@ -225,7 +225,7 @@
                                 </ul>
                             <li class="sub-menu">
                                 <a href="javascript:;">
-                                    <i class="fa fa-money"></i>
+                                    <i class="fa fa-key"></i>
                                     <span>Mantenimiento</span>
                                 </a>
                                 <ul class="sub">
@@ -235,6 +235,12 @@
                                     <li><a href="?page=mpfm02">MPFM-02</a></li>
                                     <li><a href="?page=mpfm03">MPFM-03</a></li>
                                 </ul>
+                            </li>
+                            <li>
+                                <a href="?page=prove">
+                                    <i class="fa fa-money"></i>
+                                    <span>Proveedores</span>
+                                </a>
                             </li>
                             <li>
                                 <a href="?page=setting">

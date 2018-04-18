@@ -53,7 +53,6 @@
 <!-- Placed js at the end of the document so the pages load faster -->
 
 <!--Core js-->
-<script src="backend/panel/js/jquery.js"></script>
 <script src="backend/panel/bs3/js/bootstrap.min.js"></script>
 <script class="include" type="text/javascript" src="backend/panel/js/jquery.dcjqaccordion.2.7.js"></script>
 <script src="backend/panel/js/jquery.scrollTo.min.js"></script>

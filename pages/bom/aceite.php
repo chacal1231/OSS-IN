@@ -7,6 +7,7 @@ if (isset($_POST['post'])) {
 	$ref 		=	mysqli_real_escape_string($link,$_POST['ref']);
 	$des 		=	mysqli_real_escape_string($link,$_POST['des']);
 	$marca 		=	mysqli_real_escape_string($link,$_POST['marca']);
+    $prov       =   mysqli_real_escape_string($link,$_POST['prov']);
 	$fecha_c 	=	mysqli_real_escape_string($link,$_POST['fecha_c']);
     $valor      =   mysqli_real_escape_string($link,$_POST['valor']);
 	$unid 		=	mysqli_real_escape_string($link,$_POST['unid']);
@@ -17,7 +18,7 @@ if (isset($_POST['post'])) {
 	$result     = 	mysqli_query($link,"SELECT * FROM aceite WHERE proyecto='$proyecto' ORDER BY id DESC");
     $row        = 	mysqli_fetch_array($result);            
     $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO aceite(id,ref,des,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
+	mysqli_query($link,"INSERT INTO aceite(id,ref,des,marca,prov,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$prov',$fecha_c','$valor','$unid','$nota','$proyecto')");
 	
     //Actualizar registro
     $fecha          =   date('Y-m-d');
@@ -89,7 +90,29 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
     </section>
 </div>
 
-
+<script>
+$(document).ready(function(){
+ 
+ $('#prov').typeahead({
+  source: function(query, result)
+  {
+   $.ajax({
+    url:"fetch.php",
+    method:"POST",
+    data:{query:query},
+    dataType:"json",
+    success:function(data)
+    {
+     result($.map(data, function(item){
+      return item;
+     }));
+    }
+   })
+  }
+ });
+ 
+});
+</script>
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -114,6 +137,10 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
       	 		<label for="recipient-name" class="control-label"><b>Marca *:</b></label>
                 <input type="text" class="form-control" name="marca" required>
 			</div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Proveedor *:</b></label>
+                <input type="text" class="form-control" name="prov" id="prov" required>
+            </div>
 			<div class="form-group">
       	 		<label for="recipient-name" class="control-label"><b>Fecha compra *:</b></label>
                 <input type="text" class="form-control" required id="datepicker" data-date-format="yyyy-mm-dd" readonly="readonly" name="fecha_c" required>
