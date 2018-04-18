@@ -1,36 +1,25 @@
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
-$modulo =   "aceite";
 if (isset($_POST['post'])) {
     //POST
 
-    $ref        =   mysqli_real_escape_string($link,$_POST['ref']);
-    $des        =   mysqli_real_escape_string($link,$_POST['des']);
-    $marca      =   mysqli_real_escape_string($link,$_POST['marca']);
-    $fecha_c    =   mysqli_real_escape_string($link,$_POST['fecha_c']);
-    $valor      =   mysqli_real_escape_string($link,$_POST['valor']);
-    $unid       =   mysqli_real_escape_string($link,$_POST['unid']);
-    $nota       =   mysqli_real_escape_string($link,$_POST['nota']);
-    $proyecto   =   "Bom";
+    $nit        =   mysqli_real_escape_string($link,$_POST['nit']);
+    $nom        =   mysqli_real_escape_string($link,$_POST['nom']);
+    $dir        =   mysqli_real_escape_string($link,$_POST['dir']);
+    $ciu        =   mysqli_real_escape_string($link,$_POST['ciu']);
+    $tel        =   mysqli_real_escape_string($link,$_POST['tel']);
+    $clas       =   mysqli_real_escape_string($link,$_POST['clas']);
 
     //Mysql
-    $result     =   mysqli_query($link,"SELECT * FROM aceite WHERE proyecto='$proyecto' ORDER BY id DESC");
+    $result     =   mysqli_query($link,"SELECT * FROM prov ORDER BY id DESC");
     $row        =   mysqli_fetch_array($result);            
     $id         =   ($row["id"]+1);
-    mysqli_query($link,"INSERT INTO aceite(id,ref,des,marca,fecha_c,precio,unid,nota,proyecto) VALUES('$id','$ref','$des','$marca','$fecha_c','$valor','$unid','$nota','$proyecto')");
-    
-    //Actualizar registro
-    $fecha          =   date('Y-m-d');
-    $hora           =   date('h:i:s A');
-    $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
-    $row_reg        =   mysqli_fetch_array($result_reg);            
-    $id_reg         =   ($row_reg["id"]+1);
-    $des            =   "$_SESSION[name] agregó $unid unidades";
-    mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unid')");
+    mysqli_query($link,"INSERT INTO prov(id,nit,nombre,dir,ciudad,tel,clas) VALUES('$id','$nit','$nom','$dir','$ciu','$tel','$clas')");
     $my_error = mysqli_error($link);
     if(empty($my_error)){
             echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                     <strong>¡Todo correcto!</strong> Se ha añadido correctamente el producto.</div>';
+                     <strong>¡Todo correcto!</strong> Se ha añadido correctamente el proveedor.</div>';
     }else{
         echo $my_error;
     }
@@ -64,10 +53,6 @@ $(document).ready(function(){
  
 });
 </script>
-
-<input type="text" name="country" id="country" class="form-control input-lg" autocomplete="off" placeholder="Type Country Name" />
-
-
 
 <div class="row">
     <div class="col-sm-12">
@@ -131,32 +116,28 @@ $(document).ready(function(){
       <div class="modal-body">
          <form id="modal-form" action="" method="post">
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Referencia *:</b></label>
-                <input type="text" name="country" id="country" class="form-control input-lg" autocomplete="off" placeholder="Type Country Name" />
+                <label for="recipient-name" class="control-label"><b>NIT *:</b></label>
+               <input type="text" class="form-control" name="nit" required>
             </div>
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Descripción *:</b></label>
-                <input type="text" class="form-control" name="des" required>
+                <label for="recipient-name" class="control-label"><b>Nombre *:</b></label>
+                <input type="text" class="form-control" name="nom" required>
             </div>
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Marca *:</b></label>
-                <input type="text" class="form-control" name="marca" required>
+                <label for="recipient-name" class="control-label"><b>Dirección *:</b></label>
+                <input type="text" class="form-control" name="dir" required>
             </div>
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Fecha compra *:</b></label>
-                <input type="text" class="form-control" required id="datepicker" data-date-format="yyyy-mm-dd" readonly="readonly" name="fecha_c" required>
+                <label for="recipient-name" class="control-label"><b>Ciudad *:</b></label>
+                <input type="text" class="form-control" name="ciu" required>
             </div>
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Valor producto *:</b></label>
-                <input type="text" class="form-control" name="valor" required>
+                <label for="recipient-name" class="control-label"><b>Telefono *:</b></label>
+                <input type="text" class="form-control" name="tel" required>
             </div>
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Unidades *:</b></label>
-                <input type="text" class="form-control" name="unid" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Nota *:</b></label>
-                <textarea class="form-control" rows="5" name="nota"></textarea>
+                <label for="recipient-name" class="control-label"><b>Clase *:</b></label>
+                <input type="text" class="form-control" name="clas" required>
             </div>
       </div>
       <div class="modal-footer">
