@@ -243,6 +243,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="?page=req">
+                                    <i class="fa fa-vcard-o"></i>
+                                    <span>Requisiciones</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="?page=setting">
                                     <i class="fa fa-cogs"></i>
                                     <span>Configuraciones</span>
