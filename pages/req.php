@@ -1,12 +1,52 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
 if(isset($_POST['post'])){
-	$can   =   mysqli_escape_string($link,$_POST['can']);
-    $um    =   mysqli_escape_string($link,$_POST['um']);
-    $ref   =   mysqli_escape_string($link,$_POST['ref']);
-    $des   =   mysqli_escape_string($link,$_POST['des']);
-    $tp    =   mysqli_escape_string($link,$_POST['tp']);
+	$can   =   $_POST['can'];
+    $um    =   $_POST['um'];
+    $ref   =   $_POST['ref'];
+    $des   =   $_POST['des'];
+    $tp    =   $_POST['tp'];
+    $prio  =   $_POST['prio'];
+    $obs   =   $_POST['obs'];
+    $proy  =   $_POST['proy'];
 
+    //Mysql
+    $result     =   mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
+    $row        =   mysqli_fetch_array($result);            
+    $id         =   ($row["id"]+1);
+    //Productos
+    $result_p   =   mysqli_query($link,"SELECT * FROM req_productos ORDER BY id DESC");
+    $row_p      =   mysqli_fetch_array($result_p);            
+    $id_pp      =   ($row_p["id"]+1);
+    $con        =   "OSS-REQ-" .$id;
+    $cargo      =   "Auxiliar";
+    $nom        =   "David Mcmahon"; 
+    $fecha_e    =   date('Y-m-d');
+    //Prioridad
+    if($prio=="Alta"){
+        $fecha_r    =   date('Y-m-d', strtotime($stop_date . ' +1 day'));
+    }else if($prio=="Media"){
+        $fecha_r    =   date('Y-m-d', strtotime($stop_date . ' +2 day'));
+    }else if($prio=="Baja"){
+        $fecha_r    =   date('Y-m-d', strtotime($stop_date . ' +3 day'));
+    }
+    $fecha_res  =   "1970-01-01";
+    //Ciclo para obtener datos
+    for ($i=0; $i < count($can) ; $i++) {
+        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]')");
+        $id_pp  =   $id_pp + 1;
+
+    }
+    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','0')");
+    //Verificación Mysql
+    $my_error = mysqli_error($link);
+    if(empty($my_error)){
+            echo '<div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Todo correcto!</strong> Se ha añadido correctamente el producto.</div>';
+    }else{
+        echo $my_error;
+    }
 }
 ?>
 
@@ -93,12 +133,17 @@ function delete_row(rowno)
         <div class="modal-body custom-height-modal">
             <form id="modal-form" action="" method="post">
             <label for="recipient-name" class="control-lab  el"><b>Prioridad *:</b></label>
-            <select id="direccion" name="direccion" class="form-control">
+            <select id="direccion" name="prio" class="form-control">
                 <option value="">-- Seleccionar --</option>
-                <option value="1">Alta</option>
-                <option value="2">Media</option>
-                <option value="3">Baja</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
             </select>
+            <br>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Proyecto *:</b></label>
+                <input type="text" class="form-control" name="proy" required>
+            </div>
 
             <br>
             <div class="table-responsive">
@@ -134,7 +179,7 @@ function delete_row(rowno)
 
 <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" name="post" value="Sign up">Agregar</button>
+        <button type="submit" class="btn btn-primary" name="post" value="Sign up">Enviar</button>
       </div>
             </form>
         </div>
