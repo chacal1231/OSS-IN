@@ -48,6 +48,10 @@ if(isset($_POST['post'])){
         echo $my_error;
     }
 }
+
+//Mysql para tabla
+$QueryTabla = mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
+$RowTabla = mysqli_fetch_array($QueryTabla);
 ?>
 
 <div class="row">
@@ -64,29 +68,50 @@ if(isset($_POST['post'])){
                                 <table  class="display table table-bordered table-striped" id="dynamic-table">
                                     <thead>
                                         <tr>
-                                            <th>NIT</th>
-                                            <th>Nombre</th>
-                                            <th>Dirección</th>
-                                            <th>Ciudad</th>
-                                            <th>Telefono</th>
-                                            <th>Clasificación</th>
+                                            <th>Consecutivo</th>
+                                            <th>Nombre del solicitante</th>
+                                            <th>Fecha de solicitud</th>
+                                            <th>Fecha requerimiento</th>
+                                            <th>Priodidad</th>
+                                            <th>Estado</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach( $QueryTabla as $RowTabla => $field ) : ?> <!-- Mulai loop -->
                                         <tr class="text-besar">
-                                            <td><?php echo $field['nit']; ?></td>
-                                            <td><?php echo $field['nombre']; ?></td>
-                                            <td><?php echo $field['dir']; ?></td>
-                                            <td><?php echo $field['ciudad']; ?></td>
-                                            <td><?php echo $field['tel']; ?></td>
-                                            <td><?php echo $field['clas']; ?></td>
-                                            <td>
-                                                <a class="btn btn-success btn-xs" target="_blank" href="?page=gen/producto&ref=<?php echo $field['ref']; ?>&mod=<?php echo $modulo; ?>" title="Editar">
-                                                    <i class="fa fa-pencil"></i>
+                                            <td><?php echo $field['con']; ?></td>
+                                            <td><?php echo $field['nom']; ?></td>
+                                            <td><?php echo $field['fecha_e']; ?></td>
+                                            <td><?php echo $field['fecha_r']; ?></td>
+                                            <td> <?php if($field['prio'] == 'Alta'){ ?>
+                                                <button type="button" class="btn btn-danger">Alta</button>
+
+                                            <?php } elseif($field['prio'] == 'Media') { ?>
+                                            
+                                                <button type="button" class="btn btn-warning">Media</button>
+
+
+                                            <?php } elseif($field['prio'] == 'Baja') { ?>
+                                            
+                                                <button type="button" class="btn btn-info">Baja</button>
+
+                                            <?php } ?>  
+                                            </td>
+                                            <td> <?php if($field['estado'] == '0'){ ?>
+                                                <button type="button" class="btn btn-danger">Sin responder</button>
+
+                                            <?php } elseif($field['estado'] == '1') { ?>
+                                            
+                                                <button type="button" class="btn btn-success">Respondida</button>
+
+                                            <?php } ?> 
+                                            </td> 
+                                             <td>
+                                                <a class="btn btn-success btn-lg" target="_blank" href="?page=gen/producto&ref=<?php echo $field['ref']; ?>&mod=<?php echo $modulo; ?>" title="Ver">
+                                                    <i class="fa fa-eye"></i>
                                                 </a>
-                                            </td>                                               
+                                            </td>                                              
                                         </tr>
                                         <?php endforeach; ?> <!-- Selesai loop -->                                  
                                     </tbody>
@@ -169,7 +194,7 @@ function delete_row(rowno)
                                 </table>
                             </div>
                             <br>
-                 <input type="button" class="btn btn-success" onclick="add_row();" value="Agregar item">
+                            <input type="button" class="btn btn-success" onclick="add_row();" value="Agregar item">
                  <br>
                  <br>
         <div class="form-group">
@@ -177,10 +202,10 @@ function delete_row(rowno)
                 <textarea class="form-control" rows="5" name="obs"></textarea>
         </div>
 
-<div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" name="post" value="Sign up">Enviar</button>
-      </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="post" value="Sign up">Enviar</button>
+        </div>
             </form>
         </div>
      </div>
