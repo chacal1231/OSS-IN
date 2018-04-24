@@ -48,8 +48,8 @@ foreach($ConsultaCorreos as $RowCorreos => $field){
   $mail->SMTPAuth   = true;
   $mail->Port = $port;
  
-  $mail->setFrom('recordatorio@oss.com.co', 'OSS Mantenimiento');
-  $mail->addAddress("compras@oss.com.co");
+  $mail->setFrom('sistemas@oss.com.co', 'OSS Mantenimiento');
+  $mail->addAddress("jedmacmahonve@unal.edu.co");
   $mail->Subject = "Recordatorio mantenimiento";
   $message = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <?xml version="1.0" encoding="windows-1252"?><html>

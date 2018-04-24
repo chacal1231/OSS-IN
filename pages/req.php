@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
 if(isset($_POST['post'])){
+    require 'inc/PHPMailer/PHPMailerAutoload.php';
 	$can   =   $_POST['can'];
     $um    =   $_POST['um'];
     $ref   =   $_POST['ref'];
@@ -38,6 +39,28 @@ if(isset($_POST['post'])){
 
     }
     mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','0')");
+    //Correos
+    $ConsultaCorreos=mysqli_query($link,"SELECT * FROM correos");
+    $RowCorreos=mysqli_fetch_array($ConsultaCorreos);
+    //PHPMailer clase
+    $mail = new PHPMailer;
+    //$mail->SMTPDebug = SMTP::DEBUG_CONNECTION;
+    //$mail->Debugoutput = 'html';
+    $mail->isSMTP();
+    $mail->CharSet = 'UTF-8';
+    $mail->Host = $smtp;
+    $mail->SMTPAuth = $SMTPAuth;
+    $mail->Username = $usuarioSmtp;
+    $mail->Password = $contraseñaSmtp;
+    $mail->SMTPSecure = $SMTPSecure;
+    $mail->SMTPAuth   = true;
+    $mail->Port = $port;
+ 
+    $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
+    $mail->addAddress("compras@oss.com.co");
+    $mail->Subject = "Nueva requisición $con de $nom";
+    $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a sistema.oss.com.co para revisar la requisición $con";    
+    $mail->send();
     //Verificación Mysql
     $my_error = mysqli_error($link);
     if(empty($my_error)){
@@ -47,7 +70,9 @@ if(isset($_POST['post'])){
     }else{
         echo $my_error;
     }
-}
+}if(isset($_POST['post'])){
+    echo "";
+    }
 
 //Mysql para tabla
 $QueryTabla = mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
@@ -108,9 +133,10 @@ $RowTabla = mysqli_fetch_array($QueryTabla);
                                             <?php } ?> 
                                             </td> 
                                              <td>
-                                                <a class="btn btn-success btn-lg" target="_blank" href="?page=gen/producto&ref=<?php echo $field['ref']; ?>&mod=<?php echo $modulo; ?>" title="Ver">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
+                                             <form action="" method="post">
+                                                <button type="submit" class="btn btn-success" name='ver' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver
+                                                </button>
+                                             </form>
                                             </td>                                              
                                         </tr>
                                         <?php endforeach; ?> <!-- Selesai loop -->                                  

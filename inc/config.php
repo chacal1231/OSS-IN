@@ -22,8 +22,8 @@
 	$iva_empresa="16%";
 	
 	//Correo 
-	$usuarioSmtp="recordatorio@oss.com.co";
-	$contraseñaSmtp="1&m(O0_th.H@";
+	$usuarioSmtp="sistemas@oss.com.co";
+	$contraseñaSmtp="@oss2015";
 	$smtp="host5.latinoamericahosting.com";
 	$SMTPSecure="tls";
 	$port="587";
