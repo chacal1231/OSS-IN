@@ -70,13 +70,17 @@ if(isset($_POST['post'])){
     }else{
         echo $my_error;
     }
-}if(isset($_POST['post'])){
-    echo "";
+}if(isset($_POST['ver'])){
+    echo "<body onLoad=$('#myModal2').modal('show')>";
+    $QueryModal     =   mysqli_query($link,"SELECT * FROM req WHERE con='$_POST[ver]'");
+    $RowModal       =   mysqli_fetch_array($QueryModal);
+    $QueryProductos = mysqli_query($link,"SELECT * FROM req_productos WHERE con='$_POST[ver]' ORDER BY id DESC");
+    $RowProductos   = mysqli_fetch_array($QueryProductos);
     }
 
 //Mysql para tabla
 $QueryTabla = mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
-$RowTabla = mysqli_fetch_array($QueryTabla);
+$RowTabla   = mysqli_fetch_array($QueryTabla);
 ?>
 
 <div class="row">
@@ -124,13 +128,17 @@ $RowTabla = mysqli_fetch_array($QueryTabla);
                                             <?php } ?>  
                                             </td>
                                             <td> <?php if($field['estado'] == '0'){ ?>
-                                                <button type="button" class="btn btn-danger">Sin responder</button>
+                                                <button type="button" class="btn btn-warning">En revisión</button>
 
                                             <?php } elseif($field['estado'] == '1') { ?>
                                             
-                                                <button type="button" class="btn btn-success">Respondida</button>
+                                                <button type="button" class="btn btn-info">Pre-aprobada</button>
 
-                                            <?php } ?> 
+                                            <?php } else if($field['estado'] == '2') { ?>
+                                            
+                                                <button type="button" class="btn btn-success">En proceso de compra</button>
+
+                                            <?php } ?>
                                             </td> 
                                              <td>
                                              <form action="" method="post">
@@ -231,6 +239,75 @@ function delete_row(rowno)
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
             <button type="submit" class="btn btn-success btn-lg" name="post" value="Sign up">Enviar</button>
+        </div>
+            </form>
+        </div>
+     </div>
+    </div>
+</div>
+
+
+
+<!-- Modal2 -->
+<div id="myModal2" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Requisición # <?php echo $RowModal['con']; ?></h4>
+      </div>
+        <div class="modal-body custom-height-modal">
+        <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Nombre del solicitante :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal['nom']; ?>" readonly></b>
+        </div>
+        <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Prioridad de la requisición :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal['prio']; ?>" readonly></b>
+        </div>
+        <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Fecha en la que se requiere la solicitud :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal['fecha_r']; ?>" readonly></b>
+        </div>
+            <form id="modal-form" action="" method="post">
+            <br>
+            <div class="table-responsive">
+                                <table  class="table table-bordered table-hover" id="employee_table">
+                                    <thead>
+                                        <tr class="custom">
+                                            <th>Cantidad</th>
+                                            <th>Unidad de medida</th>
+                                            <th>Referencia/Talla</th>
+                                            <th>Descripción</th>
+                                            <th>Tipo de compra</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach( $QueryProductos as $RowProductos => $field ) : ?>
+                                            <tr class="text-besar">
+                                            <td><input type="text" class="form-control" name="can[]" value="<?php echo $field[cant];?>" required></td>
+                                            <td><input type="text" class="form-control" name="um[]" value="<?php echo $field[um];?>" required></td>
+                                            <td><input type="text" class="form-control" name="ref[]" value="<?php echo $field[ref];?>" required></td>
+                                            <td><input type="text" class="form-control" name="des[]" value="<?php echo $field[des];?>"required></td>
+                                            <td><input type="text" class="form-control" name="des[]" value="<?php echo $field[tp];?>"required></td>
+                                            </tr>
+                                        <?php endforeach; ?>                                
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                 <br>
+                 <br>
+        <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Observaciones *:</b></label>
+                <textarea class="form-control" rows="5" name="obs"></textarea>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="post" value="Sign up">Aprobar</button>
         </div>
             </form>
         </div>
