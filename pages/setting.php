@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-4 col-sm-offset-3">
         <section class="panel">
             <header class="panel-heading">
                 Configuración de usuario
@@ -15,7 +15,7 @@
                     $name       = mysqli_real_escape_string($link,$_POST['name']);
                     $username   = mysqli_real_escape_string($link,$_POST['username']);
                     $password   = mysqli_real_escape_string($link,md5($_POST['password']));
-                    $change_user = mysqli_query($link,"UPDATE user SET name_user='$name', username='$username',  password='$password' WHERE id_user='1'") or die(mysqli_error());
+                    $change_user = mysqli_query($link,"UPDATE user SET name_user='$name', username='$username',  password='$password' WHERE id_user='$_SESSION[id]'") or die(mysqli_error());
                     if($change_user){
                         echo '<div class="alert alert-success" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -23,7 +23,7 @@
                     }
                 }?>
                 <?php
-                    $user = mysqli_query($link,"SELECT * FROM user WHERE id_user='1'") or die(mysql_error());
+                    $user = mysqli_query($link,"SELECT * FROM user WHERE id_user='$_SESSION[id]'") or die(mysql_error());
                     $u = mysqli_fetch_assoc($user);
                 ?>
                 <form accept="" method="post">
