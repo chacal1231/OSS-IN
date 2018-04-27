@@ -77,6 +77,21 @@ if(isset($_POST['post'])){
     $QueryProductos = mysqli_query($link,"SELECT * FROM req_productos WHERE con='$_POST[ver]' ORDER BY id DESC");
     $RowProductos   = mysqli_fetch_array($QueryProductos);
     }
+if(isset($_POST['apro'])){
+    $can   =   $_POST['can_a'];
+    $um    =   $_POST['um_a'];
+    $ref   =   $_POST['ref_a'];
+    $des   =   $_POST['des_a'];
+    $tp    =   $_POST['tp_a'];
+    //Ciclo para obtener datos
+    for ($i=0; $i < count($can) ; $i++) {
+        //mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]')");
+        echo "$can[$i] y $um[$i] y $ref[$i] y $des[$i] y $tp[$i]";
+        echo "<br>";
+        $id_pp  =   $id_pp + 1;
+
+    }
+}
 
 //Mysql para tabla
 $QueryTabla = mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
@@ -164,7 +179,7 @@ function add_row()
 {
  $rowno=$("#employee_table tr").length;
  $rowno=$rowno+1;
- $("#employee_table tr:last").after("<tr id='row"+$rowno+"'><td><input type='text' class='form-control' name='can[]' required></td><td><input type='text' class='form-control' name='um[]' required></td><td><input type='text' name='ref[]' class='form-control' required></td><td><input type='text' name='des[]' class='form-control' required ></td><<td><select id='direccion' name='tp[]' class='form-control'><option value=''>----</option><option value=1>Consumible</option><option value=2>Inventario</option><option value=3>Servicio</option></select></td><td><input type='button' value='-' onclick=delete_row('row"+$rowno+"')></td></tr>");
+ $("#employee_table tr:last").after("<tr id='row"+$rowno+"'><td><input type='text' class='form-control' name='can[]' required></td><td><input type='text' class='form-control' name='um[]' required></td><td><input type='text' name='ref[]' class='form-control' required></td><td><input type='text' name='des[]' class='form-control' required ></td><<td><select id='direccion' name='tp[]' class='form-control'><option value=''>----</option><option value='Consumible'>Consumible</option><option value='Inventario'>Inventario</option><option value='Servicio'>Servicio</option></select></td><td><input type='button' value='-' onclick=delete_row('row"+$rowno+"')></td></tr>");
 }
 function delete_row(rowno)
 {
@@ -222,7 +237,7 @@ function delete_row(rowno)
                                             <td><input type="text" class="form-control" name="um[]" required></td>
                                             <td><input type="text" class="form-control" name="ref[]" required></td>
                                             <td><input type="text" class="form-control" name="des[]" required></td>
-                                            <td><select id="direccion" name="tp[]" class="form-control"><option value="">----</option><option value="1">Consumible</option><option value="2">Inventario</option><option value="3">Servicio</option></select></td>
+                                            <td><select id="direccion" name="tp[]" class="form-control"><option value="">----</option><option value="Consumible">Consumible</option><option value="Inventario">Inventario</option><option value="Servicio">Servicio</option></select></td>
                                         </tr>                                
                                     </tbody>
                                 </table>
@@ -287,11 +302,11 @@ function delete_row(rowno)
                                     <tbody>
                                         <?php foreach( $QueryProductos as $RowProductos => $field ) : ?>
                                             <tr class="text-besar">
-                                            <td><input type="text" class="form-control" name="can[]" value="<?php echo $field[cant];?>" required></td>
-                                            <td><input type="text" class="form-control" name="um[]" value="<?php echo $field[um];?>" required></td>
-                                            <td><input type="text" class="form-control" name="ref[]" value="<?php echo $field[ref];?>" required></td>
-                                            <td><input type="text" class="form-control" name="des[]" value="<?php echo $field[des];?>"required></td>
-                                            <td><input type="text" class="form-control" name="des[]" value="<?php echo $field[tp];?>"required></td>
+                                            <td><input type="text" class="form-control" name="can_a[]" value="<?php echo $field[cant];?>" required></td>
+                                            <td><input type="text" class="form-control" name="um_a[]" value="<?php echo $field[um];?>" required></td>
+                                            <td><input type="text" class="form-control" name="ref_a[]" value="<?php echo $field[ref];?>" required></td>
+                                            <td><input type="text" class="form-control" name="des_a[]" value="<?php echo $field[des];?>"required></td>
+                                            <td><input type="text" class="form-control" name="tp_a[]" value="<?php echo $field[tp];?>"required></td>
                                             </tr>
                                         <?php endforeach; ?>                                
                                     </tbody>
@@ -302,12 +317,12 @@ function delete_row(rowno)
                  <br>
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Observaciones *:</b></label>
-                <textarea class="form-control" rows="5" name="obs"></textarea>
+                <textarea class="form-control" rows="5" name="obs"><?php echo $RowModal[obs];?></textarea>
         </div>
 
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-success btn-lg" name="post" value="Sign up">Aprobar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="apro" value="Sign up">Aprobar</button>
         </div>
             </form>
         </div>
