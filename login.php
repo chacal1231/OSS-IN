@@ -44,7 +44,7 @@
                         include 'inc/config.php';
                         if(isset($_POST['login'])){	
                             $username = mysqli_real_escape_string($link,$_POST['username']);
-                            $password = mysqli_real_escape_string($link,md5($_POST['password']));
+                            $password = mysqli_real_escape_string($link,($_POST['password']));
                             $perintah = mysqli_query($link,"SELECT * FROM user WHERE username = '$username' AND password = '$password'") or die(mysqli_error());
                             if (mysqli_num_rows($perintah) > 0) {
                                 $row = mysqli_fetch_assoc($perintah);
