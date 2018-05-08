@@ -20,8 +20,11 @@ if(isset($_POST['post'])){
     $row_p      =   mysqli_fetch_array($result_p);            
     $id_pp      =   ($row_p["id"]+1);
     $con        =   "OSS-REQ-" .$id;
-    $cargo      =   "Auxiliar";
-    $nom        =   "David Mcmahon"; 
+    //usuario información
+    $UserQuery  =   mysqli_query($link,"SELECT * FROM user WHERE id_user='$_SESSION[id]'");
+    $RowUser    =   mysqli_fetch_array($UserQuery);
+    $cargo      =   $RowUser['cargo'];
+    $nom        =   $RowUser['name_user'];
     $fecha_e    =   date('Y-m-d');
     //Prioridad
     if($prio=="Alta"){
@@ -57,7 +60,7 @@ if(isset($_POST['post'])){
     $mail->Port = $port;
  
     $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
-    $mail->addAddress("compras@oss.com.co");
+    $mail->addAddress("/compras@oss.com.co");
     $mail->Subject = "Nueva requisición $con de $nom";
     $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a sistema.oss.com.co para revisar la requisición $con";    
     $mail->send();
@@ -156,11 +159,13 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                             <?php } ?>
                                             </td> 
                                              <td>
+                                             <?php if($_SESSION['priv'] == '0' OR $_SESSION['priv'] == '1'){ ?>
                                              <form action="" method="post">
                                                 <button type="submit" class="btn btn-success" name='ver' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver
                                                 </button>
                                              </form>
-                                            </td>                                              
+                                            </td>
+                                            <?php } ?>                                              
                                         </tr>
                                         <?php endforeach; ?> <!-- Selesai loop -->                                  
                                     </tbody>

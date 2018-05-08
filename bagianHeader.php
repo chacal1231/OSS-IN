@@ -140,101 +140,17 @@
                                     <span>OSS</span>
                                 </a>
                             </li>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
+                            <li>
+                                <a href="?page=inventario">
+                                    <i class="fa fa-suitcase"></i>
+                                    <span>Inventario</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="?page=proyectos">
                                     <i class="fa fa-suitcase"></i>
                                     <span>Proyectos</span>
                                 </a>
-                                <ul class="sub">
-                                    <li>
-                                    <a href="javascript:;">
-                                    <i class="fa fa-battery-full"></i>    
-                                    Generación
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li><a href="?page=gen/herramientas">Herramientas</a></li>
-                                        <li><a href="?page=gen/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?page=gen/repuestos">Repuestos</a></li>
-                                        <li><a href="?page=gen/equipos">Equipos</a></li>
-                                        <li><a href="?page=gen/alquiler">Alquiler</a></li>
-                                    </ul>
-                                    </li>
-                                    <li>
-                                    <a href="javascript:;">
-                                    <i class="fa fa-bold"></i>    
-                                    Bombeo
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li><a href="?page=bom/herramientas">Herramientas</a></li>
-                                        <li><a href="?page=bom/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?page=bom/repuestos">Repuestos</a></li>
-                                        <li><a href="?page=bom/equipos">Equipos</a></li>
-                                        <li><a href="?page=bom/alquiler">Alquiler</a></li>
-                                    </ul>
-                                    </li>
-                                    <li>
-                                    <a href="javascript:;">
-                                    <i class="fa fa-sitemap"></i>    
-                                    Well testing
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li><a href="?page=wt/herramientas">Herramientas</a></li>
-                                        <li><a href="?page=wt/repuestos">Repuestos</a></li>
-                                        <li><a href="?page=wt/tratamiento">Equipos</a></li>
-                                    </ul>
-                                    </li>
-                                    <li>
-                                    <a href="javascript:;">
-                                    <i class="fa fa-tint"></i>    
-                                    Tratamiento
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li><a href="?page=tra/herramientas">Herramientas</a></li>
-                                        <li><a href="?page=tra/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?page=tra/repuestos">Repuestos</a></li>
-                                        <li><a href="?page=tra/equipos">Equipos</a></li>
-                                        <li><a href="?page=tra/alquiler">Alquiler</a></li>
-                                    </ul>
-                                    </li>
-                                    <li>
-                                    <a href="javascript:;">
-                                    <i class="fa fa-fire-extinguisher"></i>    
-                                    Well services
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li><a href="?page=ws/herramientas">Herramientas</a></li>
-                                        <li><a href="?page=ws/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?page=ws/repuestos">Repuestos</a></li>
-                                        <li><a href="?page=ws/equipos">Equipos</a></li>
-                                        <li><a href="?page=ws/alquiler">Alquiler</a></li>
-                                    </ul>
-                                    </li>
-                                    <li>
-                                    <a href="javascript:;">
-                                    <i class="fa fa-building"></i>    
-                                    Bases
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li><a href="?page=bases/herramientas">Herramientas</a></li>
-                                        <li><a href="?page=bases/aceite">Aceites y lubricantes</a></li>
-                                        <li><a href="?page=bases/repuestos">Repuestos</a></li>
-                                        <li><a href="?page=bases/equipos">Equipos</a></li>
-                                        <li><a href="?page=bases/alquiler">Alquiler</a></li>
-                                    </ul>
-                                    </li>
-                                </ul>
-                            <li class="sub-menu">
-                                <a href="javascript:;">
-                                    <i class="fa fa-key"></i>
-                                    <span>Mantenimiento</span>
-                                </a>
-                                <ul class="sub">
-                                    <li><a href="?page=gen33">Generador 33</a></li>
-                                    <li><a href="?page=gen34">Generador 34</a></li>
-                                    <li><a href="?page=mpfm01">MPFM-01</a></li>
-                                    <li><a href="?page=mpfm02">MPFM-02</a></li>
-                                    <li><a href="?page=mpfm03">MPFM-03</a></li>
-                                </ul>
                             </li>
                             <li>
                                 <a href="?page=prove">
