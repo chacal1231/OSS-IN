@@ -6,6 +6,7 @@ if (isset($_POST['post'])) {
 	$ref         =	mysqli_real_escape_string($link,$_POST['ref']);
 	$des 	 	     =	mysqli_real_escape_string($link,$_POST['des']);
 	$marca 	     =	mysqli_real_escape_string($link,$_POST['marca']);
+  $ti          =  mysqli_real_escape_string($link,$_POST['ti']);
   $prov        =  mysqli_real_escape_string($link,$_POST['prov']);
 	$fecha_c 	   =	mysqli_real_escape_string($link,$_POST['fecha_c']);
   $valor       =  mysqli_real_escape_string($link,$_POST['valor']);
@@ -19,7 +20,7 @@ if (isset($_POST['post'])) {
 	$result     = 	mysqli_query($link,"SELECT * FROM inventario ORDER BY id DESC");
   $row        = 	mysqli_fetch_array($result);            
   $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,prov,fecha_c,precio,unid,asig,proyecto,motivoas) VALUES('$id','$ref','$des','$marca','$prov','$fecha_c','$valor','$unid','$asig','$proyecto','$motivoas')");
+	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,precio,unid,asig,proyecto,motivoas) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$valor','$unid','$asig','$proyecto','$motivoas')");
 	
     //Actualizar registro
     $fecha          =   date('Y-m-d');
@@ -141,6 +142,18 @@ $(document).ready(function(){
       	 		<label for="recipient-name" class="control-label"><b>Marca *:</b></label>
                 <input type="text" class="form-control" name="marca" required>
 			</div>
+       <div class="form-group">
+                  <label for="recipient-name" class="control-label"><b>Tipo de item *:</b></label>
+                                <select id="ti" name="ti" class="form-control">
+                                <option value="">-- Seleccionar --</option>
+                                <option value="Equipo">Equipo</option>
+                                <option value="Consumible">Consumible</option>
+                                <option value="Aceite">Aceite</option>
+                                <option value="Lubricante">Lubricante</option>
+                                <option value="Herramienta">Herramienta</option>
+                                <option value="Repuesto">Repuesto</option>
+                                </select>
+                            </div>
             <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Proveedor *:</b></label>
                 <input type="text" class="form-control" name="prov" id="prov" required>
