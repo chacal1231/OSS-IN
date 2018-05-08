@@ -146,11 +146,17 @@
                                     <span>Inventario</span>
                                 </a>
                             </li>
-                            <li>
+                             <li class="sub-menu">
                                 <a href="?page=proyectos">
                                     <i class="fa fa-suitcase"></i>
                                     <span>Proyectos</span>
                                 </a>
+                                 <ul class="sub-menu">
+                                    <li><a href="?page=locacion">Locación</a></li>
+                                    <li><a href="?page=ubicacion">Ubicación</a></li>
+                                    <li><a href="?page=equipos">Equipos</a></li>
+                                 </ul>
+                            </li>
                             </li>
                             <li>
                                 <a href="?page=prove">
