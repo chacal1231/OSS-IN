@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
 //GET
-$ref	        =   $_GET['ref'];
+$ref	        =   mysqli_real_escape_string($link,$_GET['ref']);
 //Mysql
 $QueryId	=	mysqli_query($link,"SELECT * FROM inventario WHERE ref='$ref' ORDER BY id DESC");
 $RowId		=	mysqli_fetch_array($QueryId);
