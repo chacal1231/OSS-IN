@@ -147,13 +147,13 @@
                                 </a>
                             </li>
                              <li class="sub-menu">
-                                <a href="?page=proyectos">
-                                    <i class="fa fa-suitcase"></i>
+                                <a>
+                                    <i class="fa fa-key"></i>
                                     <span>Proyectos</span>
                                 </a>
                                  <ul class="sub-menu">
+                                    <li><a href="?page=proyecto">Proyecto</a></li>
                                     <li><a href="?page=locacion">Locación</a></li>
-                                    <li><a href="?page=ubicacion">Ubicación</a></li>
                                     <li><a href="?page=equipos">Equipos</a></li>
                                  </ul>
                             </li>
