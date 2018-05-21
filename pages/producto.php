@@ -29,6 +29,7 @@ if (isset($_POST['modi'])) {
     echo "<script>setTimeout(\"location.href = '?page=home';\", 3000);</script>";
   }
 }
+//Eliminar item
 if (isset($_POST['remove'])) {
   if($_SESSION['priv']!=0){
     echo '<div class="alert alert-danger" role="alert">
@@ -42,6 +43,36 @@ if (isset($_POST['remove'])) {
                      <strong>¡Todo correcto!</strong> Se han eliminado correctamente el producto.</div>';
       echo "<script>setTimeout(\"location.href = '?page=home';\", 3000);</script>";
   }
+//Asignar item
+}if (isset($_POST['asignar'])) {
+  $proyecto      = mysqli_real_escape_string($link,$_POST['proyecto']);
+  $locacion      = mysqli_real_escape_string($link,$_POST['locacion']);
+  $equipo        = mysqli_real_escape_string($link,$_POST['equipo']);
+  $unidades      = mysqli_real_escape_string($link,$_POST['unidades']);
+  $motivoas      = mysqli_real_escape_string($link,$_POST['motivoas']);
+
+  //query eliminar del stock
+  $unidades_totales = ($RowId['unid']-$unidades);
+  if ($unidades_totales < 0){
+    echo '<div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Error!</strong> No hay stock suficientes en el inventario.</div>';
+  }else{
+    mysqli_query($link,"UPDATE inventario SET proyecto='$proyecto',locacion='$locacion',equipo='$equipo',unid='$unidades_totales' WHERE ref='$ref'");
+    $my_error = mysqli_error($link);
+    echo $my_error;
+    //Actualizar registro
+    $fecha          =   date('Y-m-d');
+    $hora           =   date('h:i:s A');
+    $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
+    $row_reg        =   mysqli_fetch_array($result_reg);            
+    $id_reg         =   ($row_reg["id"]+1);
+    $des            =   "$_SESSION[name] asignó $unidades_totales items al proyecto $proyecto en la locación $locacion al equipo $equipo";
+    mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unidades_totales')");
+    $my_error = mysqli_error($link);
+    echo $my_error;
+  }
+  
   
 }
 
@@ -186,24 +217,91 @@ if (isset($_POST['remove'])) {
   </div>
 </div>
 
+<?php
+$QueryProyecto  = mysqli_query($link,"SELECT * FROM proyectos ORDER BY id ASC");
+$RowProyecto  = mysqli_fetch_array($QueryProyecto);
+?>
+
+<?php
+$QueryLocacion  = mysqli_query($link,"SELECT * FROM locacion ORDER BY id ASC");
+$RowLocacion  = mysqli_fetch_array($QueryLocacion);
+?>
+
+<?php
+$QueryEquipos  = mysqli_query($link,"SELECT * FROM equipos ORDER BY id ASC");
+$RowEquipos  = mysqli_fetch_array($QueryEquipos);
+?>
 
 <!-- Modal Asignar -->
 <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Asignar item <?php echo $RowId['ref'];?> a proyecto</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Asignar item <?php echo $RowId['ref'];?> a un proyecto</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
       <form id="modal-form" action="" method="post">
-            
+      <label for="recipient-name" class="control-label"><b>Proyecto*:</b></label>
+            <select id="plan" name="proyecto" class="form-control">
+                <?php
+                do{
+                    ?>
+                      <option value="No Asignado">No asignado</option>
+                      <option value="<?php echo $RowProyecto['nombre']?>">
+                          <?php echo $RowProyecto['nombre']; ?>
+                        </option>
+                        <?php
+                        }while ($RowProyecto = $QueryProyecto->fetch_assoc())   ?>
+            </select>
+            <br>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Locación *:</b></label>
+            <select id="plan" name="locacion" class="form-control">
+                <?php
+                do{
+                    ?>
+                      <option value="No Asignado">No asignado</option>
+                      <option value="<?php echo $RowLocacion['locacion']?>">
+                          <?php echo $RowLocacion['locacion']; ?>
+                        </option>
+                        <?php
+                        }while ($RowLocacion = $QueryLocacion->fetch_assoc())   ?>
+            </select>
+         </div>
+         <br>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Equipo *:</b></label>
+            <select id="plan" name="equipo" class="form-control">
+                <?php
+                do{
+                    ?>
+                      <option value="No Asignado">No asignado</option>
+                      <option value="<?php echo $RowEquipos['equipos']?>">
+                          <?php echo $RowEquipos['locacion']; ?>
+                        </option>
+                        <?php
+                        }while ($RowEquipos = $QueryEquipos->fetch_assoc())   ?>
+            </select>
+      </div>
+       <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Unidades disponibles</b></label>
+            <input type="text" class="form-control" name="unidades" readonly="yes" value="<?=$RowId['unid'];?>">
+      </div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Unidades a asignar *:</b></label>
+            <input type="text" class="form-control" name="unidades" required>
+      </div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Motivo de asignación *:</b></label>
+            <textarea class="form-control" rows="5" name="motivoas"></textarea>
+      </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" name="modi" value="Sign up">Asignar Item</button>
+        <button type="submit" class="btn btn-primary" name="asignar" value="Sign up">Asignar Item</button>
          </form>
       </div>
     </div>

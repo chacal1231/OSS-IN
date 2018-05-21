@@ -20,7 +20,7 @@ if (isset($_POST['post'])) {
 	$result     = 	mysqli_query($link,"SELECT * FROM inventario ORDER BY id DESC");
   $row        = 	mysqli_fetch_array($result);            
   $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,precio,unid,asig,proyecto,motivoas) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$valor','$unid','$asig','$proyecto','$motivoas')");
+	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,precio,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$valor','$unid','$asig','$proyecto','$proyecto','$proyecto','$motivoas')");
 	
     //Actualizar registro
     $fecha          =   date('Y-m-d');
