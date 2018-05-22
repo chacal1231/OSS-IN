@@ -6,27 +6,32 @@ $ref	        =   mysqli_real_escape_string($link,$_GET['ref']);
 $QueryId	=	mysqli_query($link,"SELECT * FROM inventario WHERE ref='$ref' ORDER BY id DESC");
 $RowId		=	mysqli_fetch_array($QueryId);
 //Modificar
-if (isset($_POST['modi'])) {
+if (isset($_POST['stock'])) {
   if($_SESSION['priv']!=0){
     echo '<div class="alert alert-danger" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Usted no tiene privilegios suficientes para continuar con la operación!</strong></div>';
   }else{
-    $ref_m      = mysqli_real_escape_string($link,$_POST['ref']);
-    $des_m      = mysqli_real_escape_string($link,$_POST['des']);
-    $marca_m    = mysqli_real_escape_string($link,$_POST['marca']);
-    $fecha_c_m  = mysqli_real_escape_string($link,$_POST['fecha_c']);
-    $valor_m    = mysqli_real_escape_string($link,$_POST['valor']);
-    $unid_m     = mysqli_real_escape_string($link,$_POST['unid']);
-    $asig       = mysqli_real_escape_string($link,$_POST['asig']);
-    $proyecto   = mysqli_real_escape_string($link,$_POST['proyecto']);
-    $motivoas   = mysqli_real_escape_string($link,$_POST['motivoas']);
+    $unid   = mysqli_real_escape_string($link,$_POST['unid']);
 
-    mysqli_query($link,"UPDATE inventario SET ref='$ref_m',des='$des_m',marca='$marca_m',fecha_c='$fecha_c_m',precio='$valor_m',unid='$unid_m',asig='$asig',proyecto='$proyecto',motivoas='$motivoas' WHERE ref='$ref'");
+    //Query actualizar unidades
+    $unidades_totales = ($RowId['unid']+$unid);
+    mysqli_query($link,"UPDATE inventario SET unid='$unidades_totales' WHERE ref='$ref'");
+
+    //Query actualizar registro
+    $fecha          =   date('Y-m-d');
+    $hora           =   date('h:i:s A');
+    $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
+    $row_reg        =   mysqli_fetch_array($result_reg);            
+    $id_reg         =   ($row_reg["id"]+1);
+    $des            =   "$_SESSION[name] agregó $unid items al stock";
+    mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unid')");
+
+    //Mensaje
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Todo correcto!</strong> Se han modificado correctamente el producto.</div>';
-    echo "<script>setTimeout(\"location.href = '?page=home';\", 3000);</script>";
+    echo "<script>setTimeout(\"location.href = '?page=producto&ref=$ref';\", 3000);</script>";
   }
 }
 //Eliminar item
@@ -58,21 +63,25 @@ if (isset($_POST['remove'])) {
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Error!</strong> No hay stock suficientes en el inventario.</div>';
   }else{
+    //Actualizar inventario query
     mysqli_query($link,"UPDATE inventario SET proyecto='$proyecto',locacion='$locacion',equipo='$equipo',unid='$unidades_totales',motivoas='$motivoas',asig='Si' WHERE ref='$ref'");
+
     //Actualizar registro
     $fecha          =   date('Y-m-d');
     $hora           =   date('h:i:s A');
     $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
     $row_reg        =   mysqli_fetch_array($result_reg);            
     $id_reg         =   ($row_reg["id"]+1);
-    $des            =   "$_SESSION[name] asignó $unidades_totales items al proyecto $proyecto en la locación $locacion al equipo $equipo";
-    mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unidades_totales')");
+    $des            =   "$_SESSION[name] asignó $unidades items al proyecto $proyecto en la locación $locacion al equipo $equipo";
+    mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unidades')");
 
     //Query para popular asignación
     $result_asig      =   mysqli_query($link,"SELECT * FROM asignados ORDER BY id DESC");
     $row_asig         =   mysqli_fetch_array($result_asig);            
     $id_asig          =   ($row_asig["id"]+1);
-    mysqli_query($link,"INSERT INTO asignados(id,ref,unid,motivoas,proyecto,locacion,equipo) VALUES('$id','$ref','$unid','$motivoas','$proyecto','$locacion','$equipo')");
+    mysqli_query($link,"INSERT INTO asignados(id,ref,unid,motivoas,proyecto,locacion,equipo) VALUES('$id_asig','$ref','$unidades','$motivoas','$proyecto','$locacion','$equipo')");
+    $my_error = mysqli_error($link);
+    echo $my_error;
 
 
     echo '<div class="alert alert-success" role="alert">
@@ -100,7 +109,7 @@ if (isset($_POST['remove'])) {
                                     <i class="glyphicon glyphicon-trash"></i> eliminar
                                 </button>
                        
-											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-pencil"></i> Editar </a>	
+											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-plus"></i> Agregar stock </a>	
 
                                  <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Editar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a> 
 
@@ -168,7 +177,7 @@ if (isset($_POST['remove'])) {
 </html>
 
 
-<!-- Modal editar -->
+<!-- Modal agregar -->
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -181,53 +190,14 @@ if (isset($_POST['remove'])) {
       <div class="modal-body">
       <form id="modal-form" action="" method="post">
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Referencia *:</b></label>
-                <input type="text" class="form-control" name="ref" value="<?php echo $RowId['ref'];?>" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Descripción *:</b></label>
-                <input type="text" class="form-control" name="des" value="<?php echo $RowId['des'];?>" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Marca *:</b></label>
-                <input type="text" class="form-control" name="marca" value="<?php echo $RowId['marca'];?>" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Fecha compra *:</b></label>
-                <input type="text" class="form-control" required id="datepicker" data-date-format="yyyy-mm-dd" value="<?php echo $RowId['fecha_c'];?>" name="fecha_c" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Valor producto *:</b></label>
-                <input type="text" class="form-control" name="valor" value="<?php echo $RowId['precio'];?>" required>
-            </div>
-            <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Unidades *:</b></label>
-                <input type="text" class="form-control" name="unid" value="<?php echo $RowId['unid'];?>" required>
+                <input type="text" class="form-control" name="unid" required>
             </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Asignado *:</b></label>
-                <input type="text" class="form-control" name="asig" value="<?php echo $RowId['asig'];?>" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Proyecto *:</b></label>
-                <input type="text" class="form-control" name="proyecto" value="<?php echo $RowId['proyecto'];?>" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Locación *:</b></label>
-                <input type="text" class="form-control" name="proyecto" value="<?php echo $RowId['proyecto'];?>" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Equipo *:</b></label>
-                <input type="text" class="form-control" name="proyecto" value="<?php echo $RowId['locacion'];?>" required>
-            </div>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Motivo de asignación *:</b></label>
-                <input type="text" class="form-control" name="motivoas" value="<?php echo $RowId['motivoas'];?>" required>
-            </div>
+            
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" name="modi" value="Sign up">Editar item</button>
+        <button type="submit" class="btn btn-primary" name="stock" value="Sign up">Agregar stock</button>
          </form>
       </div>
     </div>
@@ -264,10 +234,10 @@ $RowEquipos  = mysqli_fetch_array($QueryEquipos);
       <div class="form-group">
       <label for="recipient-name" class="control-label"><b>Proyecto*:</b></label>
             <select id="plan" name="proyecto" class="form-control">
+            <option value="No Asignado">No asignado</option>
                 <?php
                 do{
                     ?>
-                      <option value="No Asignado">No asignado</option>
                       <option value="<?php echo $RowProyecto['nombre']?>">
                           <?php echo $RowProyecto['nombre']; ?>
                         </option>
