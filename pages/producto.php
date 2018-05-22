@@ -90,6 +90,12 @@ if (isset($_POST['remove'])) {
   }
   
   
+}if (isset($_POST['des'])) {
+  if($RowId['ti']=='Consumible' OR $RowId['ti']=='Aceite' OR $RowId['ti']=='Lubricante'){
+    echo '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> No se puede Des-asignar este tipo de item.</div>';
+  }else{
+    echo "HOLA";
+  }
 }
 
 ?>
@@ -296,8 +302,12 @@ $RowEquipos  = mysqli_fetch_array($QueryEquipos);
 </div>
 
 
+<?php
+$QueryProyecto1  = mysqli_query($link,"SELECT * FROM proyectos ORDER BY id ASC");
+$RowProyecto1  = mysqli_fetch_array($QueryProyecto1);
+?>
 <!-- Modal Desasignar -->
-<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -308,64 +318,23 @@ $RowEquipos  = mysqli_fetch_array($QueryEquipos);
       </div>
       <div class="modal-body">
       <form id="modal-form" action="" method="post">
-      <label for="recipient-name" class="control-label"><b>Proyecto*:</b></label>
+        <div class="form-group">
+          <label for="recipient-name" class="control-label"><b>El item reposará en la base*:</b></label>
             <select id="plan" name="proyecto" class="form-control">
                 <?php
                 do{
                     ?>
-                      <option value="No Asignado">No asignado</option>
-                      <option value="<?php echo $RowProyecto['nombre']?>">
-                          <?php echo $RowProyecto['nombre']; ?>
+                      <option value="<?php echo $RowProyecto1['nombre']?>">
+                          <?php echo $RowProyecto1['nombre']; ?>
                         </option>
                         <?php
-                        }while ($RowProyecto = $QueryProyecto->fetch_assoc())   ?>
+                        }while ($RowProyecto1 = $QueryProyecto1->fetch_assoc())   ?>
             </select>
-            <br>
-      <div class="form-group">
-            <label for="recipient-name" class="control-label"><b>Locación *:</b></label>
-            <select id="plan" name="locacion" class="form-control">
-                <?php
-                do{
-                    ?>
-                      <option value="No Asignado">No asignado</option>
-                      <option value="<?php echo $RowLocacion['locacion']?>">
-                          <?php echo $RowLocacion['locacion']; ?>
-                        </option>
-                        <?php
-                        }while ($RowLocacion = $QueryLocacion->fetch_assoc())   ?>
-            </select>
-         </div>
-         <br>
-      <div class="form-group">
-            <label for="recipient-name" class="control-label"><b>Equipo *:</b></label>
-            <select id="plan" name="equipo" class="form-control">
-                <?php
-                do{
-                    ?>
-                      <option value="No Asignado">No asignado</option>
-                      <option value="<?php echo $RowEquipos['equipos']?>">
-                          <?php echo $RowEquipos['equipos']; ?>
-                        </option>
-                        <?php
-                        }while ($RowEquipos = $QueryEquipos->fetch_assoc())   ?>
-            </select>
-      </div>
-       <div class="form-group">
-            <label for="recipient-name" class="control-label"><b>Unidades disponibles</b></label>
-            <input type="text" class="form-control" name="unidades" readonly="yes" value="<?=$RowId['unid'];?>">
-      </div>
-      <div class="form-group">
-            <label for="recipient-name" class="control-label"><b>Unidades a asignar *:</b></label>
-            <input type="text" class="form-control" name="unidades" required>
-      </div>
-      <div class="form-group">
-            <label for="recipient-name" class="control-label"><b>Motivo de asignación *:</b></label>
-            <textarea class="form-control" rows="5" name="motivoas"></textarea>
-      </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" name="asignar" value="Sign up">Asignar Item</button>
+        <button type="submit" class="btn btn-primary" name="des" value="Sign up">Des-asignar Item</button>
          </form>
       </div>
     </div>
