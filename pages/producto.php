@@ -36,7 +36,7 @@ if (isset($_POST['remove'])) {
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Usted no tiene privilegios suficientes para continuar con la operación!</strong></div>';
   }else{
-    mysqli_query($link,"DELETE FROM $modulo WHERE ref='$_POST[remove]' AND proyecto='$proyecto'");
+    mysqli_query($link,"DELETE FROM inventario WHERE ref='$_POST[remove]'");
     mysqli_query($link,"DELETE FROM registro WHERE ref='$_POST[remove]'");
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -59,8 +59,6 @@ if (isset($_POST['remove'])) {
                      <strong>¡Error!</strong> No hay stock suficientes en el inventario.</div>';
   }else{
     mysqli_query($link,"UPDATE inventario SET proyecto='$proyecto',locacion='$locacion',equipo='$equipo',unid='$unidades_totales',motivoas='$motivoas',asig='Si' WHERE ref='$ref'");
-    $my_error = mysqli_error($link);
-    echo $my_error;
     //Actualizar registro
     $fecha          =   date('Y-m-d');
     $hora           =   date('h:i:s A');
@@ -69,8 +67,14 @@ if (isset($_POST['remove'])) {
     $id_reg         =   ($row_reg["id"]+1);
     $des            =   "$_SESSION[name] asignó $unidades_totales items al proyecto $proyecto en la locación $locacion al equipo $equipo";
     mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unidades_totales')");
-    $my_error = mysqli_error($link);
-    echo $my_error;
+
+    //Query para popular asignación
+    $result_asig      =   mysqli_query($link,"SELECT * FROM asignados ORDER BY id DESC");
+    $row_asig         =   mysqli_fetch_array($result_asig);            
+    $id_asig          =   ($row_asig["id"]+1);
+    mysqli_query($link,"INSERT INTO asignados(id,ref,unid,motivoas,proyecto,locacion,equipo) VALUES('$id','$ref','$unid','$motivoas','$proyecto','$locacion','$equipo')");
+
+
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Exito!</strong> Se asignó correctamente el item</div>';
