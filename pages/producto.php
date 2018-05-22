@@ -58,7 +58,7 @@ if (isset($_POST['remove'])) {
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Error!</strong> No hay stock suficientes en el inventario.</div>';
   }else{
-    mysqli_query($link,"UPDATE inventario SET proyecto='$proyecto',locacion='$locacion',equipo='$equipo',unid='$unidades_totales' WHERE ref='$ref'");
+    mysqli_query($link,"UPDATE inventario SET proyecto='$proyecto',locacion='$locacion',equipo='$equipo',unid='$unidades_totales',motivoas='$motivoas',asig='Si' WHERE ref='$ref'");
     $my_error = mysqli_error($link);
     echo $my_error;
     //Actualizar registro
@@ -71,6 +71,9 @@ if (isset($_POST['remove'])) {
     mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unidades_totales')");
     $my_error = mysqli_error($link);
     echo $my_error;
+    echo '<div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Exito!</strong> Se asignó correctamente el item</div>';
   }
   
   
@@ -95,7 +98,9 @@ if (isset($_POST['remove'])) {
                        
 											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-pencil"></i> Editar </a>	
 
-                                 <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Editar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a>  
+                                 <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Editar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a> 
+
+                                 <a href="#myModal4" data-toggle="modal" class="btn btn-warning" title="Editar"> <i class="glyphicon glyphicon-arrow-left"></i> Desasignar a proyecto </a>  
                           </form>
 					
               						</div>
@@ -204,6 +209,14 @@ if (isset($_POST['remove'])) {
                 <input type="text" class="form-control" name="proyecto" value="<?php echo $RowId['proyecto'];?>" required>
             </div>
             <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Locación *:</b></label>
+                <input type="text" class="form-control" name="proyecto" value="<?php echo $RowId['proyecto'];?>" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Equipo *:</b></label>
+                <input type="text" class="form-control" name="proyecto" value="<?php echo $RowId['locacion'];?>" required>
+            </div>
+            <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Motivo de asignación *:</b></label>
                 <input type="text" class="form-control" name="motivoas" value="<?php echo $RowId['motivoas'];?>" required>
             </div>
@@ -238,6 +251,83 @@ $RowEquipos  = mysqli_fetch_array($QueryEquipos);
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Asignar item <?php echo $RowId['ref'];?> a un proyecto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="modal-form" action="" method="post">
+      <div class="form-group">
+      <label for="recipient-name" class="control-label"><b>Proyecto*:</b></label>
+            <select id="plan" name="proyecto" class="form-control">
+                <?php
+                do{
+                    ?>
+                      <option value="No Asignado">No asignado</option>
+                      <option value="<?php echo $RowProyecto['nombre']?>">
+                          <?php echo $RowProyecto['nombre']; ?>
+                        </option>
+                        <?php
+                        }while ($RowProyecto = $QueryProyecto->fetch_assoc())   ?>
+            </select>
+            </div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Locación *:</b></label>
+            <select id="plan" name="locacion" class="form-control">
+                <?php
+                do{
+                    ?>
+                      <option value="No Asignado">No asignado</option>
+                      <option value="<?php echo $RowLocacion['locacion']?>">
+                          <?php echo $RowLocacion['locacion']; ?>
+                        </option>
+                        <?php
+                        }while ($RowLocacion = $QueryLocacion->fetch_assoc())   ?>
+            </select>
+         </div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Equipo *:</b></label>
+            <select id="plan" name="equipo" class="form-control">
+                <?php
+                do{
+                    ?>
+                      <option value="No Asignado">No asignado</option>
+                      <option value="<?php echo $RowEquipos['serial']?>">
+                          <?php echo $RowEquipos['serial']; ?>
+                        </option>
+                        <?php
+                        }while ($RowEquipos = $QueryEquipos->fetch_assoc())   ?>
+            </select>
+      </div>
+       <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Unidades disponibles</b></label>
+            <input type="text" class="form-control" name="unidades" readonly="yes" value="<?=$RowId['unid'];?>">
+      </div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Unidades a asignar *:</b></label>
+            <input type="text" class="form-control" name="unidades" required>
+      </div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Motivo de asignación *:</b></label>
+            <textarea class="form-control" rows="5" name="motivoas"></textarea>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary" name="asignar" value="Sign up">Asignar Item</button>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Desasignar -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Des-asignar item <?php echo $RowId['ref'];?></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -280,7 +370,7 @@ $RowEquipos  = mysqli_fetch_array($QueryEquipos);
                     ?>
                       <option value="No Asignado">No asignado</option>
                       <option value="<?php echo $RowEquipos['equipos']?>">
-                          <?php echo $RowEquipos['locacion']; ?>
+                          <?php echo $RowEquipos['equipos']; ?>
                         </option>
                         <?php
                         }while ($RowEquipos = $QueryEquipos->fetch_assoc())   ?>
