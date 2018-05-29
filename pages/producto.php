@@ -87,6 +87,7 @@ if (isset($_POST['remove'])) {
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Exito!</strong> Se asignó correctamente el item</div>';
+                     echo "<script>setTimeout(\"location.href = '?page=producto&ref=$ref';\", 3000);</script>";
   }
   
   
@@ -94,7 +95,9 @@ if (isset($_POST['remove'])) {
   if($RowId['ti']=='Consumible' OR $RowId['ti']=='Aceite' OR $RowId['ti']=='Lubricante'){
     echo '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Error!</strong> No se puede Des-asignar este tipo de item.</div>';
   }else{
-    echo "HOLA";
+    //Mysql para agregar
+    mysqli_query($link,"INSET");
+
   }
 }
 
@@ -115,11 +118,11 @@ if (isset($_POST['remove'])) {
                                     <i class="glyphicon glyphicon-trash"></i> eliminar
                                 </button>
                        
-											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Editar"> <i class="glyphicon glyphicon-plus"></i> Agregar stock </a>	
+											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Agregar stock"> <i class="glyphicon glyphicon-plus"></i> Agregar stock </a>	
 
-                                 <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Editar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a> 
+                                 <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Asignar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a> 
 
-                                 <a href="#myModal4" data-toggle="modal" class="btn btn-warning" title="Editar"> <i class="glyphicon glyphicon-arrow-left"></i> Desasignar a proyecto </a>  
+                                 <!--<a href="#myModal4" data-toggle="modal" class="btn btn-warning" title="Re-asignar"> <i class="glyphicon glyphicon-arrow-left"></i>  Re-asignar a proyecto </a>  -->
                           </form>
 					
               						</div>
