@@ -12,15 +12,30 @@ if (isset($_POST['post'])) {
   $valor       =  mysqli_real_escape_string($link,$_POST['valor']);
 	$unid 		   =	mysqli_real_escape_string($link,$_POST['unid']);
 	$nota 		   =	mysqli_real_escape_string($link,$_POST['nota']);
+  echo $total_p;
   $asig        =  "No";
   $proyecto    =  "NA";
   $motivoas    =  "NA";
+
+  $mes = date("F");
+  if ($mes=="January") $mes="Enero";
+  if ($mes=="February") $mes="Febrero";
+  if ($mes=="March") $mes="Marzo";
+  if ($mes=="April") $mes="Abril";
+  if ($mes=="May") $mes="Mayo";
+  if ($mes=="June") $mes="Junio";
+  if ($mes=="July") $mes="Julio";
+  if ($mes=="August") $mes="Agosto";
+  if ($mes=="September") $mes="Septiembre";
+  if ($mes=="October") $mes="Octubre";
+  if ($mes=="November") $mes="Noviembre";
+  if ($mes=="December") $mes="Diciembre";
 
 	//Mysql
 	$result     = 	mysqli_query($link,"SELECT * FROM inventario ORDER BY id DESC");
   $row        = 	mysqli_fetch_array($result);            
   $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,precio,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$valor','$unid','$asig','$proyecto','$proyecto','$proyecto','$motivoas')");
+	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,mes,precio,total_p,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$mes','$valor','$total_p','$unid','$asig','$proyecto','$proyecto','$proyecto','$motivoas')");
 	
     //Actualizar registro
     $fecha          =   date('Y-m-d');

@@ -60,7 +60,7 @@ if(isset($_POST['post'])){
     $mail->Port = $port;
  
     $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
-    $mail->addAddress("/compras@oss.com.co");
+    $mail->addAddress("jedmacmahonve@unal.edu.co");
     $mail->Subject = "Nueva requisición $con de $nom";
     $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a sistema.oss.com.co para revisar la requisición $con";    
     $mail->send();

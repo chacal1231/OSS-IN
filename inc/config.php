@@ -23,7 +23,7 @@
 	
 	//Correo 
 	$usuarioSmtp="sistemas@oss.com.co";
-	$contraseñaSmtp="@oss2015";
+	$contraseñaSmtp="@oss20151";
 	$smtp="host5.latinoamericahosting.com";
 	$SMTPSecure="tls";
 	$port="587";
