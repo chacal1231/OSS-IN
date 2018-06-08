@@ -80,7 +80,7 @@ if(isset($_POST['post'])){
     $QueryProductos = mysqli_query($link,"SELECT * FROM req_productos WHERE con='$_POST[ver]' ORDER BY id DESC");
     $RowProductos   = mysqli_fetch_array($QueryProductos);
     }
-if(isset($_POST['apro'])){
+if(isset($_POST['pre-apro'])){
     $can   =   $_POST['can_a'];
     $um    =   $_POST['um_a'];
     $ref   =   $_POST['ref_a'];
@@ -198,6 +198,10 @@ function delete_row(rowno)
 } 
 </style>
 
+<?php
+$result2 = mysqli_query($link,"SELECT * FROM proyectos");
+$row2 = mysqli_fetch_array($result2) or die(mysqli_error());
+?>
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
@@ -221,7 +225,19 @@ function delete_row(rowno)
             <br>
             <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Proyecto *:</b></label>
-                <input type="text" class="form-control" name="proy" required>
+                <select id="proy" name="proy" class="form-control">
+                                <?php
+                                
+                                    do 
+                                    {
+                                        ?>
+                                        <option value="<?php echo $row2['nombre']?>">
+                                        <?php echo $row2['nombre']; ?>
+                                        </option>
+                                        <?php
+                                    }while ($row2 = $result2->fetch_assoc())   ?>   
+                                
+                                </select>
             </div>
 
             <br>
@@ -327,7 +343,7 @@ function delete_row(rowno)
 
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-success btn-lg" name="apro" value="Sign up">Aprobar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="pre-apro" value="Pre-aprobar">Pre-Aprobar</button>
         </div>
             </form>
         </div>
