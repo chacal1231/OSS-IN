@@ -144,16 +144,18 @@ while($Row = mysqli_fetch_array($Query)){
   $i++;
 }
 
-$pdf->Ln(100);
+$pdf->Ln(90);
 $pdf->SetFont( 'Arial', 'B', 10 );
 $pdf->Write(0, utf8_decode('OBSERVACIONES: '));
-$pdf->SetFont( 'Arial', 'B', 8 );
+$pdf->SetFont( 'Arial', '', 8 );
 $pdf->Ln(2);
 $pdf->MultiCell( 190, 5, utf8_decode($Row_Con['obs']), 0);
-$pdf->Ln(20);
+$pdf->Ln(30);
 $pdf->SetFont( 'Arial', 'B', 10 );
 $pdf->Write(0, utf8_decode('ELABORADO POR: '));
-$pdf->Write(0, utf8_decode('________________________'));
+$pdf->SetFont( 'Arial', 'U', 10 );
+$pdf->Write(0, utf8_decode($Row_Con['nom']));
+$pdf->SetFont( 'Arial', 'B', 10 );
 $pdf -> SetX(110);
 $pdf->Write(0, utf8_decode('AUTORIZADO POR: '));
 $pdf -> SetX(145);

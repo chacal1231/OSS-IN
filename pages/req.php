@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <?php
+require 'inc/PHPMailer/PHPMailerAutoload.php';
 if(isset($_POST['post'])){
-    require 'inc/PHPMailer/PHPMailerAutoload.php';
 	$can   =   $_POST['can'];
     $um    =   $_POST['um'];
     $ref   =   $_POST['ref'];
@@ -41,7 +41,7 @@ if(isset($_POST['post'])){
         $id_pp  =   $id_pp + 1;
 
     }
-    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','0')");
+    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','En revisión')");
     //Correos
     $ConsultaCorreos=mysqli_query($link,"SELECT * FROM correos");
     $RowCorreos=mysqli_fetch_array($ConsultaCorreos);
@@ -62,7 +62,7 @@ if(isset($_POST['post'])){
     $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
     $mail->addAddress("jedmacmahonve@unal.edu.co");
     $mail->Subject = "Nueva requisición $con de $nom";
-    $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a sistema.oss.com.co para revisar la requisición $con";    
+    $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a inventario.oss.com.co para revisar la requisición $con";    
     $mail->send();
     //Verificación Mysql
     $my_error = mysqli_error($link);
@@ -77,23 +77,160 @@ if(isset($_POST['post'])){
     echo "<body onLoad=$('#myModal2').modal('show')>";
     $QueryModal     =   mysqli_query($link,"SELECT * FROM req WHERE con='$_POST[ver]'");
     $RowModal       =   mysqli_fetch_array($QueryModal);
-    $QueryProductos = mysqli_query($link,"SELECT * FROM req_productos WHERE con='$_POST[ver]' ORDER BY id DESC");
-    $RowProductos   = mysqli_fetch_array($QueryProductos);
+    $QueryProductos =   mysqli_query($link,"SELECT * FROM req_productos WHERE con='$_POST[ver]' ORDER BY id ASC");
+    $RowProductos   =   mysqli_fetch_array($QueryProductos);
     }
 if(isset($_POST['pre-apro'])){
+    $id    =   $_POST['id'];
     $can   =   $_POST['can_a'];
     $um    =   $_POST['um_a'];
     $ref   =   $_POST['ref_a'];
     $des   =   $_POST['des_a'];
     $tp    =   $_POST['tp_a'];
-    //Ciclo para obtener datos
+    $con   =   $_POST['con'];
+    //Ciclo para obtener datos y hacer consulta mysqli
     for ($i=0; $i < count($can) ; $i++) {
-        //mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]')");
-        echo "$can[$i] y $um[$i] y $ref[$i] y $des[$i] y $tp[$i]";
-        echo "<br>";
-        $id_pp  =   $id_pp + 1;
-
+        mysqli_query($link,"UPDATE req_productos SET cant=$can[$i] WHERE con='$con' AND id=$id[$i]");
     }
+
+    //PDF
+    //Query,
+    $Query_Con = mysqli_query($link,"SELECT * FROM req WHERE con='$con'");
+    $Row_Con   = mysqli_fetch_array($Query_Con);
+    // Begin configuration
+    $textColour = array( 0, 0, 0 );
+    $headerColour = array( 0, 0, 0 );
+    $tableHeaderTopTextColour = array( 255, 255, 255 );
+    $tableHeaderTopFillColour = array( 100, 152, 179 );
+    $tableHeaderTopProductTextColour = array( 0, 0, 0 );
+    $tableHeaderTopProductFillColour = array( 80, 185, 46 );
+    $tableHeaderLeftTextColour = array( 99, 42, 57 );
+    $tableHeaderLeftFillColour = array( 184, 207, 229 );
+    $tableBorderColour = array( 50, 50, 50 );
+    $tableRowFillColour = array( 213, 170, 170 );
+    $reportName = "Reporte $Pozo";
+    $reportNameYPos = 160;
+    $logoFile = "backend/panel/images/logo.png";
+    $logoXPos = 50;
+    $logoYPos = 108;
+    $logoWidth = 110;$pdf = new FPDF( 'P', 'mm', 'A4' );
+    $pdf->SetAutoPageBreak(true,10);
+    $pdf->SetTitle("Requisición $con",true);
+    $pdf->SetTextColor( $textColour[0], $textColour[1], $textColour[2] );$pdf->AddPage();
+    $pdf->SetTextColor( $headerColour[0], $headerColour[1], $headerColour[2] );
+    $pdf->SetFont( 'Arial', 'B', 13 );
+    $pdf->Image('backend/panel/images/logo.png' , 10 ,8, 40 , 20,'PNG');
+    $pdf->Cell( 0, 10, "FORMATO", 0, 0, 'C' );
+    $pdf->Cell( -190, 20, "HSEQ", 0, 0, 'C' );
+    $pdf->Cell( 0, 30, "REQUISICION DE MATERIALES Y EQUIPOS", 0, 0, 'C' );
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf -> SetX(155);    // set the cursor at Y position 5
+    $pdf->Cell( 0, 10, utf8_decode("Versión 005"), 0, 0, 'C' );
+    $pdf -> SetX(166);    // set the cursor at Y position 5
+    $pdf->Cell( 0, 20, utf8_decode("Fecha: 2018-02-19"), 0, 0, 'C' );
+    $pdf -> SetX(158);    // set the cursor at Y position 5
+    $pdf->Cell( 0, 30, utf8_decode("Página 1 de 1"), 0, 0, 'C' );
+    $pdf->SetFont( 'Arial', 'B', 15 );
+    $pdf->Ln( 10 );
+    $pdf->SetTextColor( $textColour[0], $textColour[1], $textColour[2] );
+    $pdf->SetDrawColor( $tableBorderColour[0], $tableBorderColour[1], $tableBorderColour[2] );
+    $pdf->Ln( 35 );
+    $pdf->SetFont( 'Arial', 'B', 8 );
+    $pdf->SetTextColor( $tableHeaderTopProductTextColour[0], $tableHeaderTopProductTextColour[1], $tableHeaderTopProductTextColour[2] );
+    $pdf->SetFillColor( $tableHeaderTopProductFillColour[0], $tableHeaderTopProductFillColour[1], $tableHeaderTopProductFillColour[2] );
+    $pdf->Cell( 45, 8, utf8_decode("Fecha de envío:"), 1, 0, 'C', false );
+    $pdf->Cell( 30, 8, utf8_decode($Row_Con['fecha_e']), 1, 0, 'C', true );
+    $pdf -> SetX(140);
+    $pdf->Cell( 30, 8, utf8_decode("Consecutivo:"), 1, 0, 'C', false );
+    $pdf->Cell( 30, 8, utf8_decode($con), 1, 0, 'C', true );
+
+    $pdf->Ln(8);
+    $pdf->Cell( 45, 8, "Fecha que se requiere solicitud:", 1, 0, 'C', false );
+    $pdf->Cell( 30, 8, utf8_decode($Row_Con['fecha_r']), 1, 0, 'C', true );
+    $pdf->Ln( 20 );
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf->Write(0, 'PROYECTO /CENTRO COSTO: ');
+    $pdf->SetFont( 'Arial', 'U', 10 );
+    $pdf -> SetX(70);
+    $pdf->Write(0, utf8_decode($Row_Con['proy']));
+    $pdf->Ln( 8 );
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf->Write(0, 'EQUIPO: ');
+    $pdf->SetFont( 'Arial', 'U', 10 );
+    $pdf -> SetX(70);
+    $pdf->Write(0, utf8_decode($Row_Con['equipo']));
+    $pdf->Ln( 8 );
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf->Write(0, 'NOMBRE DEL SOLICITANTE: ');
+    $pdf->SetFont( 'Arial', 'U', 10 );
+    $pdf -> SetX(70);
+    $pdf->Write(0,utf8_decode($Row_Con['nom']));
+    $pdf->Ln( 8 );
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf->Write(0, 'CARGO DEL SOLICITANTE: ');
+    $pdf->SetFont( 'Arial', 'U', 10 );
+    $pdf -> SetX(70);
+    $pdf->Write(0, utf8_decode($Row_Con['cargo']));
+    $pdf->Ln( 10 );
+    $pdf->SetFont( 'Arial', 'B', 8 );
+    $pdf->Cell( '10', 8, utf8_decode("ITEM"), 1, 0, 'C', true );
+    $pdf->Cell( '16', 8, utf8_decode("CANTIDAD"), 1, 0, 'C', true );
+    $pdf->Cell( '30', 8, utf8_decode("UNIDAD DE MEDIDA"), 1, 0, 'C', true );
+    $pdf->Cell( '30', 8, utf8_decode("REFERENCIA/TALLA"), 1, 0, 'C', true );
+    $pdf->Cell( '80', 8, utf8_decode("DESCRIPCIÓN"), 1, 0, 'C', true );
+    $pdf->Cell( '26', 8, utf8_decode("TIPO DE COMPRA"), 1, 0, 'C', true );
+    $pdf->Ln(8);
+    $i=1;
+    $pdf->SetFont( 'Arial', '', 8 );
+    $Query = mysqli_query($link,"SELECT * FROM req_productos WHERE con='OSS-REQ-1'");
+    while($Row = mysqli_fetch_array($Query)){
+        $pdf->Cell( '10', 8, $i , 1, 0, 'C', false );
+        $pdf->Cell( '16', 8, $Row['cant'], 1, 0, 'C', false );
+        $pdf->Cell( '30', 8, $Row['um'], 1, 0, 'C', false );
+        $pdf->Cell( '30', 8, $Row['ref'], 1, 0, 'C', false );
+        $pdf->Cell( '80', 8, utf8_decode($Row['des']), 1, 0, 'C', false );
+        $pdf->Cell( '26', 8, utf8_decode($Row['tp']), 1, 0, 'C', false );
+        $pdf->Ln(8);
+        $i++;
+    }
+    $pdf->Ln(90);
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf->Write(0, utf8_decode('OBSERVACIONES: '));
+    $pdf->SetFont( 'Arial', '', 8 );
+    $pdf->Ln(2);
+    $pdf->MultiCell( 190, 5, utf8_decode($Row_Con['obs']), 0);
+    $pdf->Ln(30);
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf->Write(0, utf8_decode('ELABORADO POR: '));
+    $pdf->SetFont( 'Arial', 'U', 10 );
+    $pdf->Write(0, utf8_decode($Row_Con['nom']));
+    $pdf->SetFont( 'Arial', 'B', 10 );
+    $pdf -> SetX(110);
+    $pdf->Write(0, utf8_decode('AUTORIZADO POR: '));
+    $pdf -> SetX(145);
+    $pdf->Write(0, utf8_decode('________________________'));
+    $filename="pdf/$con.pdf";
+    $pdf->Output($filename,'F');
+
+    //mail
+    $mail = new PHPMailer;
+    //$mail->SMTPDebug = SMTP::DEBUG_CONNECTION;
+    //$mail->Debugoutput = 'html';
+    $mail->isSMTP();
+    $mail->CharSet = 'UTF-8';
+    $mail->Host = $smtp;
+    $mail->SMTPAuth = $SMTPAuth;
+    $mail->Username = $usuarioSmtp;
+    $mail->Password = $contraseñaSmtp;
+    $mail->SMTPSecure = $SMTPSecure;
+    $mail->SMTPAuth   = true;
+    $mail->Port = $port;
+    $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
+    $mail->addAddress("jedmacmahonve@unal.edu.co");
+    $mail->Subject = "Nueva requisición $con de $nom";
+    $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a inventario.oss.com.co para revisar la requisición $con, a su vez se le ha adjuntado la cotización para pronta revisión.";
+    $mail->AddAttachment($filename);    
+    $mail->send();
 }
 
 //Mysql para tabla
@@ -145,14 +282,14 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
 
                                             <?php } ?>  
                                             </td>
-                                            <td> <?php if($field['estado'] == '0'){ ?>
+                                            <td> <?php if($field['estado'] == 'En revisión'){ ?>
                                                 <button type="button" class="btn btn-warning">En revisión</button>
 
-                                            <?php } elseif($field['estado'] == '1') { ?>
+                                            <?php } elseif($field['estado'] == 'Pre-aprobada') { ?>
                                             
                                                 <button type="button" class="btn btn-info">Pre-aprobada</button>
 
-                                            <?php } else if($field['estado'] == '2') { ?>
+                                            <?php } else if($field['estado'] == 'En proceso de compra') { ?>
                                             
                                                 <button type="button" class="btn btn-success">En proceso de compra</button>
 
@@ -224,7 +361,7 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
             </select>
             <br>
             <div class="form-group">
-                <label for="recipient-name" class="control-label"><b>Proyecto *:</b></label>
+                <label for="recipient-name" class="control-label"><b>Proyecto/Centro de costo *:</b></label>
                 <select id="proy" name="proy" class="form-control">
                                 <?php
                                 
@@ -303,6 +440,10 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                 <label for="recipient-name" class="control-label"><b>Prioridad de la requisición :</b></label>
                 <b><input type="text" class="form-control" value="<?php echo $RowModal['prio']; ?>" readonly></b>
         </div>
+         <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Estado de la requisición :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal['estado']; ?>" readonly></b>
+        </div>
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Fecha en la que se requiere la solicitud :</b></label>
                 <b><input type="text" class="form-control" value="<?php echo $RowModal['fecha_r']; ?>" readonly></b>
@@ -313,6 +454,7 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                                 <table  class="table table-bordered table-hover" id="employee_table">
                                     <thead>
                                         <tr class="custom">
+                                            <th>Item</th>
                                             <th>Cantidad</th>
                                             <th>Unidad de medida</th>
                                             <th>Referencia/Talla</th>
@@ -323,11 +465,12 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                                     <tbody>
                                         <?php foreach( $QueryProductos as $RowProductos => $field ) : ?>
                                             <tr class="text-besar">
+                                            <td><input type="text" size="1" class="form-control" name="id[]" value="<?php echo $field[id];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="can_a[]" value="<?php echo $field[cant];?>" required></td>
-                                            <td><input type="text" class="form-control" name="um_a[]" value="<?php echo $field[um];?>" required></td>
-                                            <td><input type="text" class="form-control" name="ref_a[]" value="<?php echo $field[ref];?>" required></td>
-                                            <td><input type="text" class="form-control" name="des_a[]" value="<?php echo $field[des];?>"required></td>
-                                            <td><input type="text" class="form-control" name="tp_a[]" value="<?php echo $field[tp];?>"required></td>
+                                            <td><input type="text" class="form-control" name="um_a[]" value="<?php echo $field[um];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="ref_a[]" value="<?php echo $field[ref];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="des_a[]" value="<?php echo $field[des];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="tp_a[]" value="<?php echo $field[tp];?>" readonly></td>
                                             </tr>
                                         <?php endforeach; ?>                                
                                     </tbody>
@@ -338,7 +481,9 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                  <br>
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Observaciones *:</b></label>
-                <textarea class="form-control" rows="5" name="obs"><?php echo $RowModal[obs];?></textarea>
+                <textarea class="form-control" rows="5" name="obs" readonly><?php echo $RowModal[obs];?></textarea>
+                <input type="hidden" name="con" value="<?php echo $RowModal['con']; ?>" />
+
         </div>
 
         <div class="modal-footer">
