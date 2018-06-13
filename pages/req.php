@@ -92,9 +92,10 @@ if(isset($_POST['pre-apro'])){
     for ($i=0; $i < count($can) ; $i++) {
         mysqli_query($link,"UPDATE req_productos SET cant=$can[$i] WHERE con='$con' AND id=$id[$i]");
     }
+    //Consulta para cambiar el estado
+    mysqli_query($link,"UPDATE req SET estado='Pre-aprobada' WHERE con='$con'");
 
-    //PDF
-    //Query,
+    /*-------------------->Generación del PDF----------------------->*/
     $Query_Con = mysqli_query($link,"SELECT * FROM req WHERE con='$con'");
     $Row_Con   = mysqli_fetch_array($Query_Con);
     // Begin configuration
@@ -227,8 +228,8 @@ if(isset($_POST['pre-apro'])){
     $mail->Port = $port;
     $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
     $mail->addAddress("jedmacmahonve@unal.edu.co");
-    $mail->Subject = "Nueva requisición $con de $nom";
-    $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a inventario.oss.com.co para revisar la requisición $con, a su vez se le ha adjuntado la cotización para pronta revisión.";
+    $mail->Subject = "Nueva requisición $con de $Row_Con[nom]";
+    $mail->Body = "OSS le informa que tiene una nueva requisición de $Row_Con[nom] con prioridad $Row_Con[prio]. Es importante que atienda a este correo y cotice los item's lo más rapido posible.";
     $mail->AddAttachment($filename);    
     $mail->send();
 }
