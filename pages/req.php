@@ -59,7 +59,7 @@ if(isset($_POST['post'])){
     $mail->SMTPAuth   = true;
     $mail->Port = $port;
  
-    $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
+    $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema requisiciones');
     $mail->addAddress("jedmacmahonve@unal.edu.co");
     $mail->Subject = "Nueva requisición $con de $nom";
     $mail->Body = "OSS le informa que tiene una nueva requisición de $nom con prioridad $prio, por favor acceder a inventario.oss.com.co para revisar la requisición $con";    
@@ -226,7 +226,7 @@ if(isset($_POST['pre-apro'])){
     $mail->SMTPSecure = $SMTPSecure;
     $mail->SMTPAuth   = true;
     $mail->Port = $port;
-    $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema');
+    $mail->setFrom('sistemas@oss.com.co', 'OSS Sistema requisiciones');
     $mail->addAddress("jedmacmahonve@unal.edu.co");
     $mail->Subject = "Nueva requisición $con de $Row_Con[nom]";
     $mail->Body = "OSS le informa que tiene una nueva requisición de $Row_Con[nom] con prioridad $Row_Con[prio]. Es importante que atienda a este correo y cotice los item's lo más rapido posible.";
@@ -244,6 +244,13 @@ if(isset($_POST['compra'])){
     $Kv_items = array(); 
     $Kv = 0;
     $uploads_dir = "uploads/";
+    // File Type Restrictions
+        $allowed = array( 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'docx', 'xls', 'doc', 'xlsx');
+        foreach($_FILES['attachment']['name'] as $name) {
+            $type = pathinfo($name, PATHINFO_EXTENSION); 
+            if(!in_array($type, $allowed)) 
+                die("<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡ERROR!</strong> El formato (<b>$type</b>) de archivo que está intentando subir no es valido.</div>");    
+        }
     foreach($_FILES['attachment']['name'] as $filename) {
         $result     =   mysqli_query($link,"SELECT * FROM archivos ORDER BY id DESC");
         $row        =   mysqli_fetch_array($result);            
@@ -253,9 +260,13 @@ if(isset($_POST['compra'])){
         echo mysqli_error($link);
         $Kv++;
         $Kv_items[] = mysqli_insert_id($link); 
- } 
- if(count($Kv_items))
-      echo count($Kv_items).' Files Inserted Successfully!' ;
+ }
+ if(count($Kv_items)){
+    $Cantidad = count($Kv_items);
+    echo "<div class='alert alert-success' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Todo correcto!</strong> Se han añadido $Cantidad cotizaciones a la requisición $con.</div>";
+ }
+ //Query para actualizar estado de requisición
+ mysqli_query($link,"UPDATE req SET estado='Finalizada' WHERE con='$con'");   
 }
 
 //Mysql para tabla
@@ -316,7 +327,11 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
 
                                             <?php } else if($field['estado'] == 'En proceso de compra') { ?>
                                             
-                                                <button type="button" class="btn btn-success">En proceso de compra</button>
+                                                <button type="button" class="btn btn-default">En proceso de compra</button>
+
+                                            <?php } else if($field['estado'] == 'Finalizada') { ?>
+                                            
+                                                <button type="button" class="btn btn-success">Finalizada</button>
 
                                             <?php } ?>
                                             </td> 
@@ -327,7 +342,10 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                                 <button type="submit" class="btn btn-success" name='ver' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver
                                                 </button>
                                                 <?php } elseif($field['estado'] == 'Pre-aprobada') { ?>
-                                                <button type="submit" class="btn btn-success" name='ver-pre' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver
+                                                <button type="submit" class="btn btn-success" name='ver-pre' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Adjuntar cotizaciones
+                                                </button>
+                                                <?php } elseif($field['estado'] == 'Finalizada') { ?>
+                                                <button type="submit" class="btn btn-success" name='ver-pre' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Actualizar precios
                                                 </button>
                                                 <?php } ?> 
                                              </form>
@@ -526,11 +544,8 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
 </div>
 
 <style type="text/css">
-    div {
-  position: relative;
-  overflow: hidden;
-}
-input {
+    
+input[type="file"] {
   position: absolute;
   font-size: 50px;
   opacity: 0;
