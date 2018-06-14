@@ -233,6 +233,30 @@ if(isset($_POST['pre-apro'])){
     $mail->AddAttachment($filename);    
     $mail->send();
 }
+if(isset($_POST['ver-pre'])){
+    echo "<body onLoad=$('#myModal3').modal('show')>";
+    $Cons = $_POST['ver-pre'];
+    $QueryModal3     =   mysqli_query($link,"SELECT * FROM req WHERE con='$Cons'");
+    $RowModal3       =   mysqli_fetch_array($QueryModal3);
+}
+if(isset($_POST['compra'])){
+    $con = $_POST['compra'];
+    $Kv_items = array(); 
+    $Kv = 0;
+    $uploads_dir = "uploads/";
+    foreach($_FILES['attachment']['name'] as $filename) {
+        $result     =   mysqli_query($link,"SELECT * FROM archivos ORDER BY id DESC");
+        $row        =   mysqli_fetch_array($result);            
+        $id         =   ($row["id"]+1);
+        move_uploaded_file($_FILES["attachment"]["tmp_name"][$Kv], $uploads_dir. basename($filename)); 
+        mysqli_query($link, "INSERT INTO archivos(id,nombre,con,fecha) values ($id ,'".$_FILES["attachment"]["name"][$Kv]."', '$con','".date('Y-m-d')."')");
+        echo mysqli_error($link);
+        $Kv++;
+        $Kv_items[] = mysqli_insert_id($link); 
+ } 
+ if(count($Kv_items))
+      echo count($Kv_items).' Files Inserted Successfully!' ;
+}
 
 //Mysql para tabla
 $QueryTabla = mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
@@ -299,8 +323,13 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                              <td>
                                              <?php if($_SESSION['priv'] == '0' OR $_SESSION['priv'] == '1'){ ?>
                                              <form action="" method="post">
+                                             <?php if($field['estado'] == 'En revisión'){ ?>
                                                 <button type="submit" class="btn btn-success" name='ver' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver
                                                 </button>
+                                                <?php } elseif($field['estado'] == 'Pre-aprobada') { ?>
+                                                <button type="submit" class="btn btn-success" name='ver-pre' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver
+                                                </button>
+                                                <?php } ?> 
                                              </form>
                                             </td>
                                             <?php } ?>                                              
@@ -484,12 +513,70 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                 <label for="recipient-name" class="control-label"><b>Observaciones *:</b></label>
                 <textarea class="form-control" rows="5" name="obs" readonly><?php echo $RowModal[obs];?></textarea>
                 <input type="hidden" name="con" value="<?php echo $RowModal['con']; ?>" />
-
         </div>
 
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
             <button type="submit" class="btn btn-success btn-lg" name="pre-apro" value="Pre-aprobar">Pre-Aprobar</button>
+        </div>
+            </form>
+        </div>
+     </div>
+    </div>
+</div>
+
+<style type="text/css">
+    div {
+  position: relative;
+  overflow: hidden;
+}
+input {
+  position: absolute;
+  font-size: 50px;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+</style>
+
+<script type="text/javascript">
+    updateList = function() {
+  var input = document.getElementById('fileInput');
+  var output = document.getElementById('fileList');
+
+  output.innerHTML = '<ul>';
+  for (var i = 0; i < input.files.length; ++i) {
+    output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
+  }
+  output.innerHTML += '</ul>';
+}
+</script>
+
+<!-- Modal3 -->
+<div id="myModal3" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Proceso de compra para la requisición # <?php echo $RowModal3['con']; ?></h4>
+      </div>
+        <div class="modal-body custom-height-modal">
+        <form id="modal-form" action="" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Seleccione los archivos que desea adjuntar al proceso de compra.</b></label>
+                <br>
+                <div class="file btn btn-lg btn-success">
+                    <span class="fa fa-upload">
+                        Seleccionar archivos <input type="file" name="attachment[]" id="fileInput" multiple onchange="javascript:updateList()" />
+                    </span>
+                </div>
+                <div id="fileList"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="compra" value="<?php echo $RowModal3['con']; ?>">Adjuntar cotizaciones</button>
         </div>
             </form>
         </div>
