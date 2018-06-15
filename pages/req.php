@@ -296,6 +296,13 @@ if(isset($_POST['precios'])){
     echo "<div class='alert alert-success' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Todo correcto!</strong> Se han actualizado correctamente los precios de la requisición.</div>";
 }if(isset($_POST['ver-final'])){
     echo "<body onLoad=$('#myModal5').modal('show')>";
+    $Cons = $_POST['ver-final'];
+    $QueryModal5     =   mysqli_query($link,"SELECT * FROM req WHERE con='$Cons'");
+    $RowModal5       =   mysqli_fetch_array($QueryModal5);
+    $QueryProductos5 =   mysqli_query($link,"SELECT * FROM req_productos WHERE con='$Cons' ORDER BY id ASC");
+    $RowProductos5   =   mysqli_fetch_array($QueryProductos5);
+    $QueryFiles      =   mysqli_query($link,"SELECT * FROM archivos WHERE con='$Cons'");
+    $RowFiles        =   mysqli_fetch_array($QueryFiles);
 }
 
 
@@ -689,6 +696,47 @@ input[type="file"] {
     </div>
 </div>
 
+<style type="text/css">
+    .modal-dialog {
+  position: relative;
+  width: auto;
+  max-width: 600px;
+  margin: 10px;
+}
+.modal-sm {
+  max-width: 300px;
+}
+.modal-lg {
+  max-width: 900px;
+}
+@media (min-width: 768px) {
+  .modal-dialog {
+    margin: 30px auto;
+  }
+}
+@media (min-width: 320px) {
+  .modal-sm {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+@media (min-width: 620px) {
+  .modal-dialog {
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .modal-lg {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+}
+@media (min-width: 920px) {
+  .modal-lg {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+</style>
 
 <!-- Modal5 -->
 <div id="myModal5" class="modal fade" role="dialog">
@@ -698,10 +746,29 @@ input[type="file"] {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Resumen de requisición # <?php echo $RowModal4['con']; ?> </h4>
+        <h4 class="modal-title">Resumen de requisición # <?php echo $RowModal5['con']; ?> </h4>
       </div>
         <div class="modal-body custom-height-modal">
         <form id="modal-form" action="" method="post">
+        <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Fecha de solicitud :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal5['fecha_e']; ?>" readonly></b>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Fecha de respuesta :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal5['fecha_r']; ?>" readonly></b>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Fecha de entrega :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal5['fecha_en']; ?>" readonly></b>
+            </div>
+            <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Costo de la requisición :</b></label>
+                <b><input type="text" class="form-control" value="<?php echo number_format((float)$RowModal5['preciototal']); ?> Pesos" readonly></b>
+            </div>
+            <br>
+            <div align="center"><h2><b>Productos solicitados en la requisicion</h2></b></div>
+            <br>
         <div class="table-responsive">
                                 <table  class="table table-bordered table-hover" id="employee_table">
                                     <thead>
@@ -716,7 +783,7 @@ input[type="file"] {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach( $QueryProductos4 as $RowProductos4 => $field ) : ?>
+                                        <?php foreach( $QueryProductos5 as $RowProductos5 => $field ) : ?>
                                             <tr class="text-besar">
                                             <td><input type="text" size="1" class="form-control" name="id[]" value="<?php echo $field[id];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="can_a[]" value="<?php echo $field[cant];?>" readonly></td>
@@ -724,7 +791,37 @@ input[type="file"] {
                                             <td><input type="text" class="form-control" name="ref_a[]" value="<?php echo $field[ref];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="des_a[]" value="<?php echo $field[des];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="tp_a[]" value="<?php echo $field[tp];?>" readonly></td>
-                                            <td><input type="text" class="form-control" name="precio_a[]" value="<?php echo $field[precio];?>"></td>
+                                            <td><input type="text" class="form-control" name="precio_a[]" value="<?php echo number_format((float)$field['precio']);;?>" readonly></td>
+                                            </tr>
+                                        <?php endforeach; ?>                                
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <br>
+            <div align="center"><h2><b>Cotizaciones</h2></b></div>
+            <br>
+        <div class="table-responsive">
+                                <table  class="table table-bordered table-hover" id="employee_table">
+                                    <thead>
+                                        <tr class="custom">
+                                            <th>Id</th>
+                                            <th>Nombre archivo</th>
+                                            <th>Fecha adjuntado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach( $QueryFiles as $RowFiles => $field ) : ?>
+                                            <tr class="text-besar">
+                                            <td><?php echo $field['id']; ?></td>
+                                            <td><?php echo $field['nombre']; ?></td>
+                                            <td><?php echo $field['fecha']; ?></td>
+                                            <td>
+                                                <a class="btn btn-primary btn-xs" target="_blank" href="uploads/<?php echo $field['nombre']; ?>" title="Ver datos de <?php echo $field['nombre']; ?>">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </td>
                                             </tr>
                                         <?php endforeach; ?>                                
                                     </tbody>
@@ -733,7 +830,6 @@ input[type="file"] {
                             <br>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-success btn-lg" name="precios" value="<?php echo $RowModal4['con']; ?>">Actualizar precios</button>
         </div>
             </form>
         </div>
