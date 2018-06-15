@@ -37,11 +37,11 @@ if(isset($_POST['post'])){
     $fecha_res  =   "1970-01-01";
     //Ciclo para obtener datos
     for ($i=0; $i < count($can) ; $i++) {
-        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp,precio) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]')",'0');
+        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp,precio) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]','0')");
         $id_pp  =   $id_pp + 1;
 
     }
-    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado,precio) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','En revisión','0')");
+    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado,preciototal) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','En revisión','0')");
     //Correos
     $ConsultaCorreos=mysqli_query($link,"SELECT * FROM correos");
     $RowCorreos=mysqli_fetch_array($ConsultaCorreos);
@@ -194,7 +194,7 @@ if(isset($_POST['pre-apro'])){
         $pdf->Ln(8);
         $i++;
     }
-    $pdf->Ln(90);
+    $pdf->Ln(10);
     $pdf->SetFont( 'Arial', 'B', 10 );
     $pdf->Write(0, utf8_decode('OBSERVACIONES: '));
     $pdf->SetFont( 'Arial', '', 8 );
@@ -232,6 +232,8 @@ if(isset($_POST['pre-apro'])){
     $mail->Body = "OSS le informa que tiene una nueva requisición de $Row_Con[nom] con prioridad $Row_Con[prio]. Es importante que atienda a este correo y cotice los item's lo más rapido posible.";
     $mail->AddAttachment($filename);    
     $mail->send();
+    //Mensaje Pre-aprobar
+     echo "<div class='alert alert-success' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Todo correcto!</strong> Se ha pre-aprobado la requisición.</div>";
 }
 if(isset($_POST['ver-pre'])){
     echo "<body onLoad=$('#myModal3').modal('show')>";
@@ -290,6 +292,10 @@ if(isset($_POST['precios'])){
     mysqli_query($link,"UPDATE req SET preciototal=$preciototal WHERE con='$Cons'");
     //Actualizar estado
     mysqli_query($link,"UPDATE req SET estado='Finalizada-1' WHERE con='$Cons'");
+    //Mensaje
+    echo "<div class='alert alert-success' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Todo correcto!</strong> Se han actualizado correctamente los precios de la requisición.</div>";
+}if(isset($_POST['ver-final'])){
+    echo "<body onLoad=$('#myModal5').modal('show')>";
 }
 
 
@@ -374,6 +380,9 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                                 </button>
                                                 <?php } elseif($field['estado'] == 'Finalizada') { ?>
                                                 <button type="submit" class="btn btn-success" name='ver-precios' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Actualizar precios
+                                                </button>
+                                                <?php } elseif($field['estado'] == 'Finalizada-1') { ?>
+                                                <button type="submit" class="btn btn-success" name='ver-final' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver requisición final
                                                 </button>
                                                 <?php } ?> 
                                              </form>
@@ -482,7 +491,7 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                  <br>
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Observaciones *:</b></label>
-                <textarea class="form-control" rows="5" name="obs"></textarea>
+                <textarea class="form-control" rows="5" name="obs" required></textarea>
         </div>
 
         <div class="modal-footer">
@@ -638,6 +647,58 @@ input[type="file"] {
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Actualización de precios para la requisición # <?php echo $RowModal4['con']; ?> </h4>
+      </div>
+        <div class="modal-body custom-height-modal">
+        <form id="modal-form" action="" method="post">
+        <div class="table-responsive">
+                                <table  class="table table-bordered table-hover" id="employee_table">
+                                    <thead>
+                                        <tr class="custom">
+                                            <th>Item</th>
+                                            <th>Cantidad</th>
+                                            <th>Unidad de medida</th>
+                                            <th>Referencia/Talla</th>
+                                            <th>Descripción</th>
+                                            <th>Tipo de compra</th>
+                                            <th>Precio (Pesos)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach( $QueryProductos4 as $RowProductos4 => $field ) : ?>
+                                            <tr class="text-besar">
+                                            <td><input type="text" size="1" class="form-control" name="id[]" value="<?php echo $field[id];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="can_a[]" value="<?php echo $field[cant];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="um_a[]" value="<?php echo $field[um];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="ref_a[]" value="<?php echo $field[ref];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="des_a[]" value="<?php echo $field[des];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="tp_a[]" value="<?php echo $field[tp];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="precio_a[]" value="<?php echo $field[precio];?>"></td>
+                                            </tr>
+                                        <?php endforeach; ?>                                
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="precios" value="<?php echo $RowModal4['con']; ?>">Actualizar precios</button>
+        </div>
+            </form>
+        </div>
+     </div>
+    </div>
+</div>
+
+
+<!-- Modal5 -->
+<div id="myModal5" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Resumen de requisición # <?php echo $RowModal4['con']; ?> </h4>
       </div>
         <div class="modal-body custom-height-modal">
         <form id="modal-form" action="" method="post">
