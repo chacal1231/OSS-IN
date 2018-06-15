@@ -37,11 +37,11 @@ if(isset($_POST['post'])){
     $fecha_res  =   "1970-01-01";
     //Ciclo para obtener datos
     for ($i=0; $i < count($can) ; $i++) {
-        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]')");
+        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp,precio) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]')",'0');
         $id_pp  =   $id_pp + 1;
 
     }
-    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','En revisión')");
+    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado,precio) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','En revisión','0')");
     //Correos
     $ConsultaCorreos=mysqli_query($link,"SELECT * FROM correos");
     $RowCorreos=mysqli_fetch_array($ConsultaCorreos);
@@ -268,6 +268,30 @@ if(isset($_POST['compra'])){
  //Query para actualizar estado de requisición
  mysqli_query($link,"UPDATE req SET estado='Finalizada' WHERE con='$con'");   
 }
+if(isset($_POST['ver-precios'])){
+    echo "<body onLoad=$('#myModal4').modal('show')>";
+    $Cons = $_POST['ver-precios'];
+    $QueryModal4     =   mysqli_query($link,"SELECT * FROM req WHERE con='$Cons'");
+    $RowModal4       =   mysqli_fetch_array($QueryModal4);
+    $QueryProductos4 =   mysqli_query($link,"SELECT * FROM req_productos WHERE con='$Cons' ORDER BY id ASC");
+    $RowProductos4   =   mysqli_fetch_array($QueryProductos4);
+}
+if(isset($_POST['precios'])){
+    $Cons   =   $_POST['precios'];
+    $id     =   $_POST['id'];
+    $precio =   $_POST['precio_a'];
+    $can    =   $_POST['can_a'];
+    //Ciclo para obtener datos y hacer consulta mysqli
+    for ($i=0; $i < count($can) ; $i++) {
+        mysqli_query($link,"UPDATE req_productos SET precio=($can[$i]*$precio[$i]) WHERE con='$Cons' AND id=$id[$i]");
+        $preciototal=$preciototal+($can[$i]*$precio[$i]);
+    }
+    //Actualizar total req
+    mysqli_query($link,"UPDATE req SET preciototal=$preciototal WHERE con='$Cons'");
+    //Actualizar estado
+    mysqli_query($link,"UPDATE req SET estado='Finalizada-1' WHERE con='$Cons'");
+}
+
 
 //Mysql para tabla
 $QueryTabla = mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
@@ -327,9 +351,13 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
 
                                             <?php } else if($field['estado'] == 'En proceso de compra') { ?>
                                             
-                                                <button type="button" class="btn btn-default">En proceso de compra</button>
+                                                <button type="button" class="btn btn-primary">En proceso de compra</button>
 
                                             <?php } else if($field['estado'] == 'Finalizada') { ?>
+                                            
+                                                <button type="button" class="btn btn-primary">En proceso de compra</button>
+
+                                            <?php } else if($field['estado'] == 'Finalizada-1') { ?>
                                             
                                                 <button type="button" class="btn btn-success">Finalizada</button>
 
@@ -345,7 +373,7 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                                 <button type="submit" class="btn btn-success" name='ver-pre' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Adjuntar cotizaciones
                                                 </button>
                                                 <?php } elseif($field['estado'] == 'Finalizada') { ?>
-                                                <button type="submit" class="btn btn-success" name='ver-pre' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Actualizar precios
+                                                <button type="submit" class="btn btn-success" name='ver-precios' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Actualizar precios
                                                 </button>
                                                 <?php } ?> 
                                              </form>
@@ -592,6 +620,59 @@ input[type="file"] {
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
             <button type="submit" class="btn btn-success btn-lg" name="compra" value="<?php echo $RowModal3['con']; ?>">Adjuntar cotizaciones</button>
+        </div>
+            </form>
+        </div>
+     </div>
+    </div>
+</div>
+
+
+
+<!-- Modal4 -->
+<div id="myModal4" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Actualización de precios para la requisición # <?php echo $RowModal4['con']; ?> </h4>
+      </div>
+        <div class="modal-body custom-height-modal">
+        <form id="modal-form" action="" method="post">
+        <div class="table-responsive">
+                                <table  class="table table-bordered table-hover" id="employee_table">
+                                    <thead>
+                                        <tr class="custom">
+                                            <th>Item</th>
+                                            <th>Cantidad</th>
+                                            <th>Unidad de medida</th>
+                                            <th>Referencia/Talla</th>
+                                            <th>Descripción</th>
+                                            <th>Tipo de compra</th>
+                                            <th>Precio (Pesos)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach( $QueryProductos4 as $RowProductos4 => $field ) : ?>
+                                            <tr class="text-besar">
+                                            <td><input type="text" size="1" class="form-control" name="id[]" value="<?php echo $field[id];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="can_a[]" value="<?php echo $field[cant];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="um_a[]" value="<?php echo $field[um];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="ref_a[]" value="<?php echo $field[ref];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="des_a[]" value="<?php echo $field[des];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="tp_a[]" value="<?php echo $field[tp];?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="precio_a[]" value="<?php echo $field[precio];?>"></td>
+                                            </tr>
+                                        <?php endforeach; ?>                                
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="precios" value="<?php echo $RowModal4['con']; ?>">Actualizar precios</button>
         </div>
             </form>
         </div>
