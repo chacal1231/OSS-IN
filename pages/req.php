@@ -392,6 +392,11 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                                 <button type="submit" class="btn btn-success" name='ver-final' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver requisición final
                                                 </button>
                                                 <?php } ?> 
+                                                <?php if($_SESSION['priv'] > '1'){ ?>
+                                                    <?php if($field['estado'] == 'Finalizada-1'){ ?>
+                                                    hola
+                                                    <?php } ?> 
+                                                <?php } ?> 
                                              </form>
                                             </td>
                                             <?php } ?>                                              
@@ -420,12 +425,7 @@ function delete_row(rowno)
  $('#'+rowno).remove();
 }
 </script>
-<style type="text/css">
-    .custom-height-modal {
-         width: 900px;
-    }
-} 
-</style>
+
 
 <?php
 $result2 = mysqli_query($link,"SELECT * FROM proyectos");
@@ -442,7 +442,7 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Nueva requisición</h4>
       </div>
-        <div class="modal-body custom-height-modal">
+        <div class="modal-body">
             <form id="modal-form" action="" method="post">
             <label for="recipient-name" class="control-lab  el"><b>Prioridad *:</b></label>
             <select id="direccion" name="prio" class="form-control">
@@ -523,7 +523,7 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Requisición # <?php echo $RowModal['con']; ?></h4>
       </div>
-        <div class="modal-body custom-height-modal">
+        <div class="modal-body">
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Nombre del solicitante :</b></label>
                 <b><input type="text" class="form-control" value="<?php echo $RowModal['nom']; ?>" readonly></b>
@@ -621,7 +621,7 @@ input[type="file"] {
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Proceso de compra para la requisición # <?php echo $RowModal3['con']; ?></h4>
       </div>
-        <div class="modal-body custom-height-modal">
+        <div class="modal-body">
         <form id="modal-form" action="" method="post" enctype="multipart/form-data">
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Seleccione los archivos que desea adjuntar al proceso de compra.</b></label>
@@ -655,7 +655,7 @@ input[type="file"] {
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Actualización de precios para la requisición # <?php echo $RowModal4['con']; ?> </h4>
       </div>
-        <div class="modal-body custom-height-modal">
+        <div class="modal-body">
         <form id="modal-form" action="" method="post">
         <div class="table-responsive">
                                 <table  class="table table-bordered table-hover" id="employee_table">
@@ -696,47 +696,7 @@ input[type="file"] {
     </div>
 </div>
 
-<style type="text/css">
-    .modal-dialog {
-  position: relative;
-  width: auto;
-  max-width: 600px;
-  margin: 10px;
-}
-.modal-sm {
-  max-width: 300px;
-}
-.modal-lg {
-  max-width: 900px;
-}
-@media (min-width: 768px) {
-  .modal-dialog {
-    margin: 30px auto;
-  }
-}
-@media (min-width: 320px) {
-  .modal-sm {
-    margin-right: auto;
-    margin-left: auto;
-  }
-}
-@media (min-width: 620px) {
-  .modal-dialog {
-    margin-right: auto;
-    margin-left: auto;
-  }
-  .modal-lg {
-    margin-right: 10px;
-    margin-left: 10px;
-  }
-}
-@media (min-width: 920px) {
-  .modal-lg {
-    margin-right: auto;
-    margin-left: auto;
-  }
-}
-</style>
+
 
 <!-- Modal5 -->
 <div id="myModal5" class="modal fade" role="dialog">
@@ -748,7 +708,7 @@ input[type="file"] {
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Resumen de requisición # <?php echo $RowModal5['con']; ?> </h4>
       </div>
-        <div class="modal-body custom-height-modal">
+        <div class="modal-body">
         <form id="modal-form" action="" method="post">
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Fecha de solicitud :</b></label>
