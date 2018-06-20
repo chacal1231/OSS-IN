@@ -41,7 +41,7 @@ if(isset($_POST['post'])){
         $id_pp  =   $id_pp + 1;
 
     }
-    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,prio,estado,preciototal) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','$prio','En revisión','0')");
+    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,fecha_entre,prio,estado,preciototal) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','0000-00-00','$prio','En revisión','0')");
     //Correos
     $ConsultaCorreos=mysqli_query($link,"SELECT * FROM correos");
     $RowCorreos=mysqli_fetch_array($ConsultaCorreos);
@@ -305,6 +305,45 @@ if(isset($_POST['precios'])){
     $RowFiles        =   mysqli_fetch_array($QueryFiles);
 }
 
+if(isset($_POST['ver-entrega'])){
+    echo "<body onLoad=$('#myModal6').modal('show')>";
+    $Cons = $_POST['ver-entrega'];
+    $QueryModal6     =   mysqli_query($link,"SELECT * FROM req WHERE con='$Cons'");
+    $RowModal6       =   mysqli_fetch_array($QueryModal6);
+}
+if(isset($_POST['entrega'])){
+    echo $con;
+    $con   = $_POST['entrega'];
+    $fecha = $_POST['fecha_e'];
+    $Kv_items = array(); 
+    $Kv = 0;
+    $uploads_dir = "uploads/";
+    //Mysql
+    mysqli_query($link,"UPDATE req SET fecha_entre='$fecha' WHERE con='$con'");
+    mysqli_query($link,"UPDATE req SET estado='Finalizada-2' WHERE con='$con'");
+    // File Type Restrictions
+        $allowed = array( 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'docx', 'xls', 'doc', 'xlsx');
+        foreach($_FILES['attachment']['name'] as $name) {
+            $type = pathinfo($name, PATHINFO_EXTENSION); 
+            if(!in_array($type, $allowed)) 
+                die("<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡ERROR!</strong> El formato (<b>$type</b>) de archivo que está intentando subir no es valido.</div>");    
+        }
+    foreach($_FILES['attachment']['name'] as $filename) {
+        $result     =   mysqli_query($link,"SELECT * FROM archivos_re ORDER BY id DESC");
+        $row        =   mysqli_fetch_array($result);            
+        $id         =   ($row["id"]+1);
+        move_uploaded_file($_FILES["attachment"]["tmp_name"][$Kv], $uploads_dir. basename($filename)); 
+        mysqli_query($link, "INSERT INTO archivos_re(id,nombre,con,fecha) values ($id ,'".$_FILES["attachment"]["name"][$Kv]."', '$con','".date('Y-m-d')."')");
+        echo mysqli_error($link);
+        $Kv++;
+        $Kv_items[] = mysqli_insert_id($link); 
+ }
+ if(count($Kv_items)){
+    $Cantidad = count($Kv_items);
+    echo "<div class='alert alert-success' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Todo correcto!</strong> Se han añadido $Cantidad remisiones a la requisición $con.</div>";
+ }
+}
+
 
 //Mysql para tabla
 $QueryTabla = mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
@@ -388,18 +427,19 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                                 <?php } elseif($field['estado'] == 'Finalizada') { ?>
                                                 <button type="submit" class="btn btn-success" name='ver-precios' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Actualizar precios
                                                 </button>
-                                                <?php } elseif($field['estado'] == 'Finalizada-1') { ?>
+                                                <?php } elseif($field['estado'] == 'Finalizada-2') { ?>
                                                 <button type="submit" class="btn btn-success" name='ver-final' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Ver requisición final
                                                 </button>
                                                 <?php } ?> 
-                                                <?php if($_SESSION['priv'] > '1'){ ?>
-                                                    <?php if($field['estado'] == 'Finalizada-1'){ ?>
-                                                    hola
-                                                    <?php } ?> 
-                                                <?php } ?> 
+                                                 <?php } ?> 
+                                                <?php if($field['estado'] == 'Finalizada-1'){ ?>
+                                                        <button type="submit" class="btn btn-success" name='ver-entrega' value='<?php echo $field[con];?>'><i class="fa fa-eye"></i> Adjuntar remisión de entrega
+                                                </button>
+                                                <?php } ?>
+                                                
                                              </form>
                                             </td>
-                                            <?php } ?>                                              
+                                                                                        
                                         </tr>
                                         <?php endforeach; ?> <!-- Selesai loop -->                                  
                                     </tbody>
@@ -790,6 +830,66 @@ input[type="file"] {
                             <br>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+        </div>
+            </form>
+        </div>
+     </div>
+    </div>
+</div>
+
+<style type="text/css">
+    
+input[type="file"] {
+  position: absolute;
+  font-size: 50px;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+</style>
+
+<script type="text/javascript">
+    updateList2 = function() {
+  var input = document.getElementById('fileInput2');
+  var output = document.getElementById('fileList2');
+
+  output.innerHTML = '<ul>';
+  for (var i = 0; i < input.files.length; ++i) {
+    output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
+  }
+  output.innerHTML += '</ul>';
+}
+</script>
+
+<!-- Modal6 -->
+<div id="myModal6" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Remisión de entrega para la requisición # <?php echo $RowModal6['con']; ?></h4>
+      </div>
+        <div class="modal-body">
+        <form id="modal-form" action="" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+                <label for="recipient-name" class="control-label"><b>Seleccione los archivos que desea adjuntar a la remisión de entrega</b></label>
+                <br>
+                <div class="file btn btn-lg btn-success">
+                    <span class="fa fa-upload">
+                        Seleccionar archivos <input type="file" name="attachment[]" id="fileInput2" multiple onchange="javascript:updateList2()" />
+                    </span>
+                </div>
+                <div id="fileList2"></div>
+        </div>
+        <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Fecha de entrega*:</b></label>
+            <input type="text" class="form-control" required id="datepicker" data-date-format="yyyy-mm-dd" readonly="readonly" name="fecha_e">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success btn-lg" name="entrega" value="<?php echo $RowModal6['con']; ?>">Adjuntar remisión</button>
         </div>
             </form>
         </div>
