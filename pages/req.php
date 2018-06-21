@@ -303,6 +303,8 @@ if(isset($_POST['precios'])){
     $RowProductos5   =   mysqli_fetch_array($QueryProductos5);
     $QueryFiles      =   mysqli_query($link,"SELECT * FROM archivos WHERE con='$Cons'");
     $RowFiles        =   mysqli_fetch_array($QueryFiles);
+    $QueryFiles2     =   mysqli_query($link,"SELECT * FROM archivos_re WHERE con='$Cons'");
+    $RowFiles2       =   mysqli_fetch_array($QueryFiles);
 }
 
 if(isset($_POST['ver-entrega'])){
@@ -410,6 +412,10 @@ $RowTabla   = mysqli_fetch_array($QueryTabla);
                                                 <button type="button" class="btn btn-primary">En proceso de compra</button>
 
                                             <?php } else if($field['estado'] == 'Finalizada-1') { ?>
+                                            
+                                                <button type="button" class="btn btn-primary">En proceso de entrega</button>
+
+                                            <?php } else if($field['estado'] == 'Finalizada-2') { ?>
                                             
                                                 <button type="button" class="btn btn-success">Finalizada</button>
 
@@ -760,7 +766,7 @@ input[type="file"] {
             </div>
             <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Fecha de entrega :</b></label>
-                <b><input type="text" class="form-control" value="<?php echo $RowModal5['fecha_en']; ?>" readonly></b>
+                <b><input type="text" class="form-control" value="<?php echo $RowModal5['fecha_entre']; ?>" readonly></b>
             </div>
             <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Costo de la requisición :</b></label>
@@ -828,6 +834,34 @@ input[type="file"] {
                                 </table>
                             </div>
                             <br>
+                            <br>
+         <div align="center"><h2><b>Remisiones de entrega</h2></b></div>
+         <div class="table-responsive">
+                                <table  class="table table-bordered table-hover" id="employee_table">
+                                    <thead>
+                                        <tr class="custom">
+                                            <th>Id</th>
+                                            <th>Nombre archivo</th>
+                                            <th>Fecha adjuntado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach( $QueryFiles2 as $RowFiles2 => $field ) : ?>
+                                            <tr class="text-besar">
+                                            <td><?php echo $field['id']; ?></td>
+                                            <td><?php echo $field['nombre']; ?></td>
+                                            <td><?php echo $field['fecha']; ?></td>
+                                            <td>
+                                                <a class="btn btn-primary btn-xs" target="_blank" href="uploads/<?php echo $field['nombre']; ?>" title="Ver datos de <?php echo $field['nombre']; ?>">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </td>
+                                            </tr>
+                                        <?php endforeach; ?>                                
+                                    </tbody>
+                                </table>
+                            </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
         </div>
