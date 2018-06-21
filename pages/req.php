@@ -619,7 +619,7 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                  <br>
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Observaciones *:</b></label>
-                <textarea class="form-control" rows="5" name="obs" readonly><?php echo $RowModal[obs];?></textarea>
+                <textarea class="form-control" rows="5" name="obs"><?php echo $RowModal[obs];?></textarea>
                 <input type="hidden" name="con" value="<?php echo $RowModal['con']; ?>" />
         </div>
 
