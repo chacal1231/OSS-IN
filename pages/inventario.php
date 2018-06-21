@@ -12,7 +12,7 @@ if (isset($_POST['post'])) {
   $valor       =  mysqli_real_escape_string($link,$_POST['valor']);
 	$unid 		   =	mysqli_real_escape_string($link,$_POST['unid']);
 	$nota 		   =	mysqli_real_escape_string($link,$_POST['nota']);
-  echo $total_p;
+  $total_p     =  ($unid*$valor);
   $asig        =  "No";
   $proyecto    =  "NA";
   $motivoas    =  "NA";
@@ -36,6 +36,8 @@ if (isset($_POST['post'])) {
   $row        = 	mysqli_fetch_array($result);            
   $id         =	($row["id"]+1);
 	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,mes,precio,total_p,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$mes','$valor','$total_p','$unid','$asig','$proyecto','$proyecto','$proyecto','$motivoas')");
+  $my_error = mysqli_error($link);
+    echo $my_error;
 	
     //Actualizar registro
     $fecha          =   date('Y-m-d');
@@ -46,6 +48,7 @@ if (isset($_POST['post'])) {
     $des            =   "$_SESSION[name] agregó el producto $des al inventario";
     mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$unid')");
     $my_error = mysqli_error($link);
+    echo $my_error;
     if(empty($my_error)){
             echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
