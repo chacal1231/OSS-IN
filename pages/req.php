@@ -10,6 +10,20 @@ if(isset($_POST['post'])){
     $prio  =   $_POST['prio'];
     $obs   =   $_POST['obs'];
     $proy  =   $_POST['proy'];
+    $equipo =  $_POST['equipo'];
+    $mes = date("F");
+    if ($mes=="January") $mes="Enero";
+    if ($mes=="February") $mes="Febrero";
+    if ($mes=="March") $mes="Marzo";
+    if ($mes=="April") $mes="Abril";
+    if ($mes=="May") $mes="Mayo";
+    if ($mes=="June") $mes="Junio";
+    if ($mes=="July") $mes="Julio";
+    if ($mes=="August") $mes="Agosto";
+    if ($mes=="September") $mes="Septiembre";
+    if ($mes=="October") $mes="Octubre";
+    if ($mes=="November") $mes="Noviembre";
+    if ($mes=="December") $mes="Diciembre";
 
     //Mysql
     $result     =   mysqli_query($link,"SELECT * FROM req ORDER BY id DESC");
@@ -41,7 +55,7 @@ if(isset($_POST['post'])){
         $id_pp  =   $id_pp + 1;
 
     }
-    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,fecha_entre,prio,estado,preciototal) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','0000-00-00','$prio','En revisión','0')");
+    mysqli_query($link,"INSERT INTO req(id,con,nom,cargo,proy,obs,fecha_e,fecha_r,fecha_res,fecha_entre,prio,estado,preciototal,equipo,mes) VALUES ('$id','$con','$nom','$cargo','$proy','$obs','$fecha_e','$fecha_r','$fecha_res','0000-00-00','$prio','En revisión','0','$equipo','$mes')");
     //Correos
     $ConsultaCorreos=mysqli_query($link,"SELECT * FROM correos");
     $RowCorreos=mysqli_fetch_array($ConsultaCorreos);
@@ -478,6 +492,12 @@ $result2 = mysqli_query($link,"SELECT * FROM proyectos");
 $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
 ?>
 
+
+<?php
+$QueryEquipos  = mysqli_query($link,"SELECT * FROM equipos ORDER BY id ASC");
+$RowEquipos  = mysqli_fetch_array($QueryEquipos);
+?>
+
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -514,6 +534,20 @@ $row2 = mysqli_fetch_array($result2) or die(mysqli_error());
                                 
                                 </select>
             </div>
+            <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Equipo *:</b></label>
+            <select id="plan" name="equipo" class="form-control">
+                <?php
+                do{
+                    ?>
+                      <option value="No Asignado">NA</option>
+                      <option value="<?php echo $RowEquipos['serial']?>">
+                          <?php echo $RowEquipos['serial']; ?>
+                        </option>
+                        <?php
+                        }while ($RowEquipos = $QueryEquipos->fetch_assoc())   ?>
+            </select>
+      </div>
 
             <br>
             <div class="table-responsive">
