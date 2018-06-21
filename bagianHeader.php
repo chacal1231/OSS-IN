@@ -152,7 +152,7 @@
                                     <span>Proyectos</span>
                                 </a>
                                  <ul class="sub-menu">
-                                    <li><a href="?page=proyecto">Proyecto</a></li>
+                                    <li><a href="?page=proyecto">Proyecto/Centro de costo</a></li>
                                     <li><a href="?page=locacion">Locación</a></li>
                                     <li><a href="?page=equipos">Equipos</a></li>
                                  </ul>
