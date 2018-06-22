@@ -607,7 +607,7 @@ $RowEquipos  = mysqli_fetch_array($QueryEquipos);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Requisición # <?php echo $RowModal['con']; ?></h4>
+        <h4 class="modal-title">Requisición # <b><?php echo $RowModal['con']; ?></b></h4>
       </div>
         <div class="modal-body">
         <div class="form-group">
@@ -739,7 +739,7 @@ input[type="file"] {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Actualización de precios para la requisición # <?php echo $RowModal4['con']; ?> </h4>
+        <h4 class="modal-title">Actualización de precios para la requisición # <b><?php echo $RowModal4['con']; ?></b></h4>
       </div>
         <div class="modal-body">
         <form id="modal-form" action="" method="post">
@@ -792,7 +792,7 @@ input[type="file"] {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Resumen de requisición # <?php echo $RowModal5['con']; ?> </h4>
+        <h4 class="modal-title">Resumen de requisición # <b><?php echo $RowModal5['con']; ?></b></h4>
       </div>
         <div class="modal-body">
         <form id="modal-form" action="" method="post">
@@ -951,7 +951,7 @@ input[type="file"] {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Remisión de entrega para la requisición # <?php echo $RowModal6['con']; ?></h4>
+        <h4 class="modal-title">Remisión de entrega para la requisición # <b><?php echo $RowModal6['con']; ?></b></h4>
       </div>
         <div class="modal-body">
         <form id="modal-form" action="" method="post" enctype="multipart/form-data">
