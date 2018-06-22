@@ -51,7 +51,7 @@ if(isset($_POST['post'])){
     $fecha_res  =   "1970-01-01";
     //Ciclo para obtener datos
     for ($i=0; $i < count($can) ; $i++) {
-        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp,precio,precio_u) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]','0','0')");
+        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp,precio,precio_u,ti,marca,prov) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]','0','0','','','')");
         $id_pp  =   $id_pp + 1;
 
     }
@@ -297,9 +297,13 @@ if(isset($_POST['precios'])){
     $id     =   $_POST['id'];
     $precio =   $_POST['precio_a'];
     $can    =   $_POST['can_a'];
+    $ti     =   $_POST['ti'];
+    $marca  =   $_POST['marca'];
+    $prov   =   $_POST['prov'];
+
     //Ciclo para obtener datos y hacer consulta mysqli
     for ($i=0; $i < count($can) ; $i++) {
-        mysqli_query($link,"UPDATE req_productos SET precio=($can[$i]*$precio[$i]), precio_u='$precio[$i]' WHERE con='$Cons' AND id=$id[$i]");
+        mysqli_query($link,"UPDATE req_productos SET precio=($can[$i]*$precio[$i]), precio_u='$precio[$i]',ti='$ti[$i]',marca='$marca[$i]',prov='$prov[$i]' WHERE con='$Cons' AND id=$id[$i]");
         $preciototal=$preciototal+($can[$i]*$precio[$i]);
     }
     //Actualizar total req
@@ -361,7 +365,7 @@ if(isset($_POST['entrega'])){
         $result     =   mysqli_query($link,"SELECT * FROM inventario ORDER BY id DESC");
         $row        =     mysqli_fetch_array($result);
         $id         = ($row["id"]+1);
-        mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,mes,precio,total_p,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$field[des]','','','','$fecha_c','$mes','$field[precio_u]','$field[precio]','$field[cant]','NA','NA','NA','NA','NA')");
+        mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,mes,precio,total_p,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$field[des]','$field[marca]','$field[ti]','$field[prov]','$fecha_c','$mes','$field[precio_u]','$field[precio]','$field[cant]','NA','NA','NA','NA','NA')");
         /* Variables registro inventario */
         $fecha          =   date('Y-m-d');
         $hora           =   date('h:i:s A');
@@ -759,7 +763,29 @@ input[type="file"] {
     </div>
 </div>
 
-
+<script>
+$(document).ready(function(){
+ 
+ $('#prov').typeahead({
+  source: function(query, result)
+  {
+   $.ajax({
+    url:"fetch.php",
+    method:"POST",
+    data:{query:query},
+    dataType:"json",
+    success:function(data)
+    {
+     result($.map(data, function(item){
+      return item;
+     }));
+    }
+   })
+  }
+ });
+ 
+});
+</script>
 
 <!-- Modal4 -->
 <div id="myModal4" class="modal fade" role="dialog">
@@ -779,10 +805,12 @@ input[type="file"] {
                                         <tr class="custom">
                                             <th>Item</th>
                                             <th>Cantidad</th>
-                                            <th>Unidad de medida</th>
-                                            <th>Referencia/Talla</th>
+                                            <th>Unidad medida</th>
                                             <th>Descripción</th>
-                                            <th>Tipo de compra</th>
+                                            <th>Tipo compra</th>
+                                            <th>Tipo item</th>
+                                            <th>Marca</th>
+                                            <th>Proveedor</th>
                                             <th>Precio (Pesos)</th>
                                         </tr>
                                     </thead>
@@ -792,16 +820,29 @@ input[type="file"] {
                                             <td><input type="text" size="1" class="form-control" name="id[]" value="<?php echo $field[id];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="can_a[]" value="<?php echo $field[cant];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="um_a[]" value="<?php echo $field[um];?>" readonly></td>
-                                            <td><input type="text" class="form-control" name="ref_a[]" value="<?php echo $field[ref];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="des_a[]" value="<?php echo $field[des];?>" readonly></td>
                                             <td><input type="text" class="form-control" name="tp_a[]" value="<?php echo $field[tp];?>" readonly></td>
-                                            <td><input type="text" class="form-control" name="precio_a[]" value="<?php echo $field[precio];?>"></td>
+                                            <td>
+                                                <select id="ti" name="ti[]" class="form-control" required>
+                                                    <option value="">-- Seleccionar --</option>
+                                                    <option value="Equipo">Equipo</option>
+                                                    <option value="Consumible">Consumible</option>
+                                                    <option value="Aceite">Aceite</option>
+                                                    <option value="Lubricante">Lubricante</option>
+                                                    <option value="Herramienta">Herramienta</option>
+                                                    <option value="Repuesto">Repuesto</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" class="form-control" name="marca[]" required></td>
+                                            <td><input type="text" class="form-control" name="prov[]" id="prov" required></td>
+                                            <td><input type="text" class="form-control" name="precio_a[]" required></td>
                                             </tr>
                                         <?php endforeach; ?>                                
                                     </tbody>
                                 </table>
                             </div>
                             <br>
+        <br>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
             <button type="submit" class="btn btn-success btn-lg" name="precios" value="<?php echo $RowModal4['con']; ?>">Actualizar precios</button>
