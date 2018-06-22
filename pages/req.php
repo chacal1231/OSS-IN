@@ -51,7 +51,7 @@ if(isset($_POST['post'])){
     $fecha_res  =   "1970-01-01";
     //Ciclo para obtener datos
     for ($i=0; $i < count($can) ; $i++) {
-        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp,precio) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]','0')");
+        mysqli_query($link,"INSERT INTO req_productos(id,con,cant,um,ref,des,tp,precio,precio_u) VALUES('$id_pp','$con','$can[$i]','$um[$i]','$ref[$i]','$des[$i]','$tp[$i]','0','0')");
         $id_pp  =   $id_pp + 1;
 
     }
@@ -299,7 +299,7 @@ if(isset($_POST['precios'])){
     $can    =   $_POST['can_a'];
     //Ciclo para obtener datos y hacer consulta mysqli
     for ($i=0; $i < count($can) ; $i++) {
-        mysqli_query($link,"UPDATE req_productos SET precio=($can[$i]*$precio[$i]) WHERE con='$Cons' AND id=$id[$i]");
+        mysqli_query($link,"UPDATE req_productos SET precio=($can[$i]*$precio[$i]), precio_u='$precio[$i]' WHERE con='$Cons' AND id=$id[$i]");
         $preciototal=$preciototal+($can[$i]*$precio[$i]);
     }
     //Actualizar total req
@@ -339,8 +339,38 @@ if(isset($_POST['entrega'])){
     /* TODO Poner items en el inventario */
     $QueryItems =   mysqli_query($link,"SELECT * FROM req_productos WHERE con='$con' AND tp='Inventario'");
     $RowItems   =   mysqli_fetch_array($QueryItems);
+    //Query id inventario
+    $fecha_c    =   date('Y-m-d');
+    $mes = date("F");
+    if ($mes=="January") $mes="Enero";
+    if ($mes=="February") $mes="Febrero";
+    if ($mes=="March") $mes="Marzo";
+    if ($mes=="April") $mes="Abril";
+    if ($mes=="May") $mes="Mayo";
+    if ($mes=="June") $mes="Junio";
+    if ($mes=="July") $mes="Julio";
+    if ($mes=="August") $mes="Agosto";
+    if ($mes=="September") $mes="Septiembre";
+    if ($mes=="October") $mes="Octubre";
+    if ($mes=="November") $mes="Noviembre";
+    if ($mes=="December") $mes="Diciembre";
+    //Variales inventario
     foreach ($QueryItems as $RowItems => $field) {
-        echo $field['cant'];
+        /*Variables inventario */
+        $ref = time() . rand(10*45, 100*98);
+        $result     =   mysqli_query($link,"SELECT * FROM inventario ORDER BY id DESC");
+        $row        =     mysqli_fetch_array($result);
+        $id         = ($row["id"]+1);
+        mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,mes,precio,total_p,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$field[des]','','','','$fecha_c','$mes','$field[precio_u]','$field[precio]','$field[cant]','NA','NA','NA','NA','NA')");
+        /* Variables registro inventario */
+        $fecha          =   date('Y-m-d');
+        $hora           =   date('h:i:s A');
+        $result_reg     =   mysqli_query($link,"SELECT * FROM registro ORDER BY id DESC");
+        $row_reg        =   mysqli_fetch_array($result_reg);            
+        $id_reg         =   ($row_reg["id"]+1);
+        $des            =   "COMPRAS agregó el producto $field[des] al inventario por medio de la requisición # $con";
+        mysqli_query($link,"INSERT INTO registro(id,fecha,hora,des,ref,total) VALUES('$id_reg','$fecha','$hora','$des','$ref','$field[cant]')");
+        echo mysqli_error($link);
     /* TODO */
     }
     // File Type Restrictions
@@ -966,7 +996,7 @@ input[type="file"] {
         </div>
         <div class="form-group">
             <label for="recipient-name" class="control-label"><b>Fecha de entrega*:</b></label>
-            <input type="text" class="form-control" required id="datepicker" data-date-format="yyyy-mm-dd" readonly="readonly" name="fecha_e">
+            <input type="text" class="form-control" id="datepicker" data-date-format="yyyy-mm-dd" readonly="readonly" name="fecha_e" required>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Cerrar</button>
