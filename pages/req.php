@@ -328,7 +328,6 @@ if(isset($_POST['ver-entrega'])){
     $RowModal6       =   mysqli_fetch_array($QueryModal6);
 }
 if(isset($_POST['entrega'])){
-    echo $con;
     $con   = $_POST['entrega'];
     $fecha = $_POST['fecha_e'];
     $Kv_items = array(); 
@@ -337,6 +336,13 @@ if(isset($_POST['entrega'])){
     //Mysql
     mysqli_query($link,"UPDATE req SET fecha_entre='$fecha' WHERE con='$con'");
     mysqli_query($link,"UPDATE req SET estado='Finalizada-2' WHERE con='$con'");
+    /* TODO Poner items en el inventario */
+    $QueryItems =   mysqli_query($link,"SELECT * FROM req_productos WHERE con='$con' AND tp='Inventario'");
+    $RowItems   =   mysqli_fetch_array($QueryItems);
+    foreach ($QueryItems as $RowItems => $field) {
+        echo $field['cant'];
+    /* TODO */
+    }
     // File Type Restrictions
         $allowed = array( 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'docx', 'xls', 'doc', 'xlsx');
         foreach($_FILES['attachment']['name'] as $name) {
@@ -699,16 +705,16 @@ input[type="file"] {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Proceso de compra para la requisición # <?php echo $RowModal3['con']; ?></h4>
+        <h4 class="modal-title">Proceso de compra para la requisición # <b><?php echo $RowModal3['con']; ?></b></h4>
       </div>
         <div class="modal-body">
         <form id="modal-form" action="" method="post" enctype="multipart/form-data">
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Seleccione los archivos que desea adjuntar al proceso de compra.</b></label>
                 <br>
-                <div class="file btn btn-lg btn-success">
-                    <span class="fa fa-upload">
-                        Seleccionar archivos <input type="file" name="attachment[]" id="fileInput" multiple onchange="javascript:updateList()" />
+                <div class="fileUpload btn btn-success">
+                    <span class="fa fa-upload">Seleccionar archivos</span>
+                        <input type="file" name="attachment[]" id="fileInput" multiple onchange="javascript:updateList()" />
                     </span>
                 </div>
                 <div id="fileList"></div>
@@ -906,13 +912,21 @@ input[type="file"] {
 </div>
 
 <style type="text/css">
-    
-input[type="file"] {
-  position: absolute;
-  font-size: 50px;
-  opacity: 0;
-  right: 0;
-  top: 0;
+    .fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }
 </style>
 
@@ -944,10 +958,9 @@ input[type="file"] {
         <div class="form-group">
                 <label for="recipient-name" class="control-label"><b>Seleccione los archivos que desea adjuntar a la remisión de entrega</b></label>
                 <br>
-                <div class="file btn btn-lg btn-success">
-                    <span class="fa fa-upload">
-                        Seleccionar archivos <input type="file" name="attachment[]" id="fileInput2" multiple onchange="javascript:updateList2()" />
-                    </span>
+                <div class="fileUpload btn btn-success">
+                    <span class="fa fa-upload">Seleccionar archivos</span>
+                        <input type="file" name="attachment[]" id="fileInput2" multiple onchange="javascript:updateList2()" />
                 </div>
                 <div id="fileList2"></div>
         </div>
