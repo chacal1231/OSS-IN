@@ -12,6 +12,7 @@ if (isset($_POST['post'])) {
   $valor       =  mysqli_real_escape_string($link,$_POST['valor']);
 	$unid 		   =	mysqli_real_escape_string($link,$_POST['unid']);
 	$nota 		   =	mysqli_real_escape_string($link,$_POST['nota']);
+  $estado      =  mysqli_real_escape_string($link,$_POST['estado']);
   $total_p     =  ($unid*$valor);
   $asig        =  "No";
   $proyecto    =  "NA";
@@ -35,7 +36,7 @@ if (isset($_POST['post'])) {
 	$result     = 	mysqli_query($link,"SELECT * FROM inventario ORDER BY id DESC");
   $row        = 	mysqli_fetch_array($result);            
   $id         =	($row["id"]+1);
-	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,mes,precio,total_p,unid,asig,proyecto,locacion,equipo,motivoas) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$mes','$valor','$total_p','$unid','$asig','$proyecto','$proyecto','$proyecto','$motivoas')");
+	mysqli_query($link,"INSERT INTO inventario(id,ref,des,marca,ti,prov,fecha_c,mes,precio,total_p,unid,asig,proyecto,locacion,equipo,motivoas,estado) VALUES('$id','$ref','$des','$marca','$ti','$prov','$fecha_c','$mes','$valor','$total_p','$unid','$asig','$proyecto','$proyecto','$proyecto','$motivoas','$estado')");
   $my_error = mysqli_error($link);
     echo $my_error;
 	
@@ -79,10 +80,9 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
                                             <th>Referencia</th>
                                             <th>Marca</th>
                                             <th>Proveedor</th>
-                                            <th>Fecha compra</th>
-                                            <th>Valor de compra</th>
                                             <th>Unidades</th>
                                             <th>Descripción</th>
+                                            <th>Estado del producto</th>
                                             <th>Ver producto</th>
                                         </tr>
                                     </thead>
@@ -92,10 +92,9 @@ $RowTabla	=	mysqli_fetch_array($QueryTabla);
                                             <td><?php echo $field['ref']; ?></td>
                                             <td><?php echo $field['marca']; ?></td>
                                             <td><?php echo $field['prov']; ?></td>
-                                            <td><?php echo $field['fecha_c']; ?></td>
-                                            <td><?php echo number_format($field['precio']); ?></td>
                                             <td><?php echo $field['unid']; ?></td>
                                             <td><?php echo $field['des']; ?></td>
+                                            <td><?php echo $field['estado']; ?></td>
                                             <td>
                                                 <a class="btn btn-success btn-xs" target="_blank" href="?page=producto&ref=<?php echo $field['ref']; ?>" title="Ver">
                                                     <i class="fa fa-eye"></i>
@@ -164,12 +163,10 @@ $(document).ready(function(){
                   <label for="recipient-name" class="control-label"><b>Tipo de item *:</b></label>
                                 <select id="ti" name="ti" class="form-control">
                                 <option value="">-- Seleccionar --</option>
-                                <option value="Equipo">Equipo</option>
-                                <option value="Consumible">Consumible</option>
-                                <option value="Aceite">Aceite</option>
-                                <option value="Lubricante">Lubricante</option>
-                                <option value="Herramienta">Herramienta</option>
-                                <option value="Repuesto">Repuesto</option>
+                                <option value="Activo fijo">Activo fijo</option>
+                                <option value="Materiales y herramientas">Materiales y herramientas</option>
+                                <option value="Consumibles">Consumibles</option>
+                                <option value="Equipo de oficina">Equipo de oficina</option>
                                 </select>
                             </div>
             <div class="form-group">
@@ -188,6 +185,15 @@ $(document).ready(function(){
       	 		<label for="recipient-name" class="control-label"><b>Unidades *:</b></label>
                 <input type="text" class="form-control" name="unid" required>
 			</div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Estado *:</b></label>
+                <select id="estado" name="estado" class="form-control">
+                <option value="">-- Seleccionar --</option>
+                <option value="Operacional">Operacional</option>
+                <option value="En reparacion">En reparación</option>
+                <option value="Stock">Stock</option>
+                </select>
+      </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

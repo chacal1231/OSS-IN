@@ -157,6 +157,17 @@
                                     <li><a href="?page=equipos">Equipos</a></li>
                                  </ul>
                             </li>
+                            <li class="sub-menu">
+                                <a>
+                                    <i class="fa fa-book"></i>
+                                    <span>Reportes</span>
+                                </a>
+                                 <ul class="sub-menu">
+                                    <li><a href="?page=r_consumibles">Consumibles por proyectos</a></li>
+                                    <li><a href="?page=inventario_proyecto">Inventario por proyecto</a></li>
+                                    <li><a href="?page=item_baja">Item's dados de baja</a></li>
+                                 </ul>
+                            </li>
                             </li>
                             <li>
                                 <a href="?page=prove">

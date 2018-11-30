@@ -46,7 +46,7 @@ if (isset($_POST['remove'])) {
     echo '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <strong>¡Todo correcto!</strong> Se han eliminado correctamente el producto.</div>';
-      echo "<script>setTimeout(\"location.href = '?page=home';\", 3000);</script>";
+      echo "<body onLoad=$('#myModalView2').modal('show')>";
   }
 //Asignar item
 }if (isset($_POST['asignar'])) {
@@ -101,6 +101,15 @@ if (isset($_POST['remove'])) {
   }
 }
 
+if(isset($_POST['baja'])){
+  mysqli_query($link,"INSERT INTO baja(ref,motivo,des) VALUES('$_POST[baja]','$_POST[motivo]', '$_POST[descrip]')");
+  echo '<div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong>¡Exito!</strong> Se envió correctamente el reporte</div>';
+                     //echo "<script>setTimeout(\"location.href = '?page=inventario';\", 3000);</script>";
+                     echo mysqli_error($link);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -115,12 +124,12 @@ if (isset($_POST['remove'])) {
               						<div class="col-sm-4 col-sm-offset-2 text-center">
                         <form action="" method="post">
                                 <button type="submit" class="btn btn-danger" name='remove' value='<?php echo $ref;?>'>
-                                    <i class="glyphicon glyphicon-trash"></i> eliminar
+                                    <i class="glyphicon glyphicon-trash"></i> Dar de baja (Janquear)
                                 </button>
                        
 											           <a href="#myModal2" data-toggle="modal" class="btn btn-info" title="Agregar stock"> <i class="glyphicon glyphicon-plus"></i> Agregar stock </a>	
 
-                                 <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Asignar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a> 
+                                 <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Asignar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a>
 
                                  <!--<a href="#myModal4" data-toggle="modal" class="btn btn-warning" title="Re-asignar"> <i class="glyphicon glyphicon-arrow-left"></i>  Re-asignar a proyecto </a>  -->
                           </form>
@@ -338,6 +347,37 @@ $RowProyecto1  = mysqli_fetch_array($QueryProyecto1);
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         <button type="submit" class="btn btn-primary" name="des" value="Sign up">Des-asignar Item</button>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Desasignar -->
+<div class="modal fade" id="myModalView2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reporte de baja item # <?php echo $_POST['remove'];?></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="modal-form" action="" method="post">
+        <div class="form-group">
+          <label for="recipient-name" class="control-label"><b>Motivo de baja*:</b></label>
+          <input type="text" class="form-control" name="motivo" required>
+        </div>
+        <div class="form-group">
+          <label for="recipient-name" class="control-label"><b>Descripción del problema*:</b></label>
+          <textarea class="form-control" rows="5" name="descrip" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary" name="baja" value="<?php echo $_POST['remove'];?>">Enviar reporte</button>
          </form>
       </div>
     </div>
