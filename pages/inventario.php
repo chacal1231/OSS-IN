@@ -153,7 +153,7 @@ $(document).ready(function(){
 			</div>
 			<div class="form-group">
       	 		<label for="recipient-name" class="control-label"><b>Descripción *:</b></label>
-                <input type="text" class="form-control" name="des" required>
+              <textarea class="form-control" rows="5" name="des" required></textarea>
 			</div>
 			<div class="form-group">
       	 		<label for="recipient-name" class="control-label"><b>Marca *:</b></label>
