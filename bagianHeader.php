@@ -188,8 +188,7 @@
                                 </a>
                                 <ul class="sub">
                                     <li><a href="?page=setting">Cambiar mi contraseña</a></li>
-									<li><a href="?page=correos">Añadir correos para avisos</a></li>
-                                    <li><a href="?page=correos">Agregar usuarios</a></li>
+                                    <li><a href="?page=usuarios">Agregar usuarios</a></li>
                                 </ul>
         
                     </div>        

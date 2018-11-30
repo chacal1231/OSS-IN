@@ -131,6 +131,9 @@ if(isset($_POST['baja'])){
 
                                  <a href="#myModal3" data-toggle="modal" class="btn btn-success" title="Asignar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a proyecto </a>
 
+
+                                 <a href="#myModal4" data-toggle="modal" class="btn btn-success" title="Asignar"> <i class="glyphicon glyphicon-arrow-right"></i> Asignar a kit </a>
+
                                  <!--<a href="#myModal4" data-toggle="modal" class="btn btn-warning" title="Re-asignar"> <i class="glyphicon glyphicon-arrow-left"></i>  Re-asignar a proyecto </a>  -->
                           </form>
 					
@@ -299,6 +302,47 @@ $RowEquipos  = mysqli_fetch_array($QueryEquipos);
             <label for="recipient-name" class="control-label"><b>Unidades a asignar *:</b></label>
             <input type="text" class="form-control" name="unidades" required>
       </div>
+      <div class="form-group">
+            <label for="recipient-name" class="control-label"><b>Motivo de asignación *:</b></label>
+            <textarea class="form-control" rows="5" name="motivoas"></textarea>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary" name="asignar" value="Sign up">Asignar Item</button>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Asignar -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar item <?php echo $RowId['ref'];?> a un kit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="modal-form" action="" method="post">
+      <div class="form-group">
+      <label for="recipient-name" class="control-label"><b>Item maestro*:</b></label>
+            <select id="plan" name="proyecto" class="form-control">
+            <option value="No Asignado">No asignado</option>
+                <?php
+                do{
+                    ?>
+                      <option value="<?php echo $RowProyecto['nombre']?>">
+                          <?php echo $RowProyecto['nombre']; ?>
+                        </option>
+                        <?php
+                        }while ($RowProyecto = $QueryProyecto->fetch_assoc())   ?>
+            </select>
+            </div>
       <div class="form-group">
             <label for="recipient-name" class="control-label"><b>Motivo de asignación *:</b></label>
             <textarea class="form-control" rows="5" name="motivoas"></textarea>
